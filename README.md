@@ -1,8 +1,11 @@
 # Zasso Web Chat
 
-Canal web de primeiro atendimento e qualificação comercial da Zasso. A interface
+Canal web de primeiro atendimento e qualificação comercial da Zasso, publicado
+como aplicação Next.js na Vercel. A interface
 reutiliza o chatbot existente como fonte única para RAG, idiomas, guardrails,
 estado da conversa e handoff comercial.
+
+Prévia: [web-chatbot-rouge.vercel.app](https://web-chatbot-rouge.vercel.app)
 
 ## Objetivo do MVP
 
@@ -39,3 +42,10 @@ npm test
 - [Segurança e privacidade](docs/SECURITY.md)
 - [Integração da API](docs/API_INTEGRATION.md)
 - [Implantação](docs/DEPLOYMENT.md)
+
+## WordPress
+
+O site institucional continua no WordPress. A aplicação pode ser vinculada por
+um botão para o subdomínio `atendimento.zasso.com` ou incorporada como widget. O
+subdomínio é a opção recomendada para o primeiro lançamento porque mantém os
+dois ambientes independentes e facilita rollback.

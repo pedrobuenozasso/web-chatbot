@@ -2,34 +2,34 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 
-async function render() {
-  const workerUrl = new URL("../dist/server/index.js", import.meta.url);
-  workerUrl.searchParams.set("test", `${process.pid}-${Date.now()}`);
-  const { default: worker } = await import(workerUrl.href);
+const root = new URL("../", import.meta.url);
 
-  return worker.fetch(
-    new Request("http://localhost/", { headers: { accept: "text/html" } }),
-    { ASSETS: { fetch: async () => new Response("Not found", { status: 404 }) } },
-    { waitUntil() {}, passThroughOnException() {} },
-  );
-}
+test("define a experiência de atendimento Zasso", async () => {
+  const [page, layout, component] = await Promise.all([
+    readFile(new URL("app/page.tsx", root), "utf8"),
+    readFile(new URL("app/layout.tsx", root), "utf8"),
+    readFile(new URL("app/components/ChatExperience.tsx", root), "utf8"),
+  ]);
 
-test("renderiza a experiência de atendimento Zasso", async () => {
-  const response = await render();
-  assert.equal(response.status, 200);
-  const html = await response.text();
-  assert.match(html, /<title>Atendimento Zasso<\/title>/i);
-  assert.match(html, /Atendimento Zasso/);
-  assert.match(html, /Digite sua mensagem/);
-  assert.match(html, /Reiniciar conversa/);
-  assert.doesNotMatch(html, /codex-preview|Your site is taking shape/);
+  assert.match(page, /ChatExperience/);
+  assert.match(layout, /Atendimento Zasso/);
+  assert.match(component, /Digite sua mensagem/);
+  assert.match(component, /Reiniciar conversa/);
+  assert.doesNotMatch(page + layout, /codex-preview|Your site is taking shape/);
 });
 
 test("mantém segredos fora do bundle cliente", async () => {
   const component = await readFile(
-    new URL("../app/components/ChatExperience.tsx", import.meta.url),
+    new URL("app/components/ChatExperience.tsx", root),
     "utf8",
   );
   assert.doesNotMatch(component, /CHATBOT_API_TOKEN|Bearer\s+/);
   assert.match(component, /\/api\/chat/);
+});
+
+test("usa integração privada no servidor", async () => {
+  const route = await readFile(new URL("app/api/chat/route.ts", root), "utf8");
+  assert.match(route, /process\.env\.CHATBOT_API_TOKEN/);
+  assert.match(route, /httpOnly:\s*true/);
+  assert.match(route, /channel:\s*"web"/);
 });
