@@ -37,6 +37,132 @@ a {
   -webkit-tap-highlight-color: transparent;
 }
 
+.legal-shell {
+  min-height: 100dvh;
+  padding: clamp(24px, 5vw, 72px) 20px;
+  background:
+    radial-gradient(circle at 12% 8%, rgba(201, 223, 87, 0.25), transparent 28%),
+    linear-gradient(145deg, #f4f8f1, #e4ece1);
+}
+
+.legal-card {
+  width: min(920px, 100%);
+  margin: 0 auto;
+  padding: clamp(28px, 5vw, 64px);
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 24px 80px rgba(31, 56, 39, 0.12);
+}
+
+.legal-card-short {
+  width: min(800px, 100%);
+}
+
+.legal-header {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: start;
+  gap: 24px;
+  margin-bottom: 44px;
+  padding-bottom: 32px;
+  border-bottom: 1px solid var(--line);
+}
+
+.legal-brand {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 92px;
+  height: 40px;
+  border-radius: 999px;
+  color: white;
+  background: #111;
+  font-weight: 850;
+  letter-spacing: -1px;
+  text-decoration: none;
+}
+
+.legal-kicker {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--green);
+  font-size: 12px;
+  font-weight: 750;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.legal-header h1 {
+  margin: 0;
+  font-size: clamp(32px, 5vw, 52px);
+  font-weight: 580;
+  letter-spacing: -0.045em;
+  line-height: 1.05;
+}
+
+.legal-header p,
+.legal-card section p,
+.legal-card li {
+  color: #526158;
+  line-height: 1.72;
+}
+
+.legal-header p {
+  margin: 10px 0 0;
+  font-size: 14px;
+}
+
+.legal-card section {
+  margin-top: 34px;
+}
+
+.legal-card section h2 {
+  margin: 0 0 12px;
+  color: var(--green-dark);
+  font-size: 20px;
+  letter-spacing: -0.02em;
+}
+
+.legal-card section p {
+  margin: 10px 0;
+}
+
+.legal-card ul {
+  margin: 12px 0 18px;
+  padding-left: 24px;
+}
+
+.legal-card li + li {
+  margin-top: 7px;
+}
+
+.legal-card a {
+  color: var(--green-dark);
+  font-weight: 650;
+}
+
+.legal-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 13px;
+}
+
+@media (max-width: 620px) {
+  .legal-header {
+    grid-template-columns: 1fr;
+  }
+
+  .legal-footer {
+    flex-direction: column;
+  }
+}
+
 .site-shell {
   position: relative;
   isolation: isolate;
