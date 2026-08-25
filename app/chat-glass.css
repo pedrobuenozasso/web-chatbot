@@ -314,9 +314,15 @@ body {
   overflow-y: auto;
   gap: 11px;
   padding: 24px 20px 16px;
-  background:
-    radial-gradient(circle at 12% 0%, oklch(92% 0.075 132 / 0.22), transparent 34%),
-    oklch(96% 0.014 145 / 0.66);
+  background-color: oklch(96% 0.014 145 / 0.66);
+  background-image:
+    linear-gradient(180deg, oklch(96% 0.014 145 / 0.9), oklch(97% 0.012 145 / 0.96)),
+    radial-gradient(circle at 12% 0%, oklch(92% 0.075 132 / 0.26), transparent 36%),
+    url("/zasso-logo.png");
+  background-position: center, top left, center 46%;
+  background-repeat: no-repeat;
+  background-size: cover, cover, min(76%, 520px) auto;
+  background-attachment: local;
   scrollbar-color: oklch(55% 0.04 145 / 0.28) transparent;
 }
 
@@ -644,6 +650,11 @@ body {
 
   .message-list {
     padding: 20px 13px 14px;
+    background-image:
+      linear-gradient(180deg, oklch(96% 0.014 145 / 0.92), oklch(97% 0.012 145 / 0.97)),
+      radial-gradient(circle at 12% 0%, oklch(92% 0.075 132 / 0.22), transparent 34%),
+      url("/zasso-logo.png");
+    background-size: cover, cover, min(84%, 360px) auto;
   }
 
   .message-bubble {
