@@ -4,7 +4,7 @@ export const runtime = "nodejs";
 
 const sessionCookie = "zasso_chat_session";
 const maximumMessageLength = 800;
-const supportedLanguages = new Set(["pt-BR", "en", "de", "fr", "es"]);
+const supportedLanguages = new Set(["pt-BR", "pt-PT", "en", "de", "fr", "es"]);
 
 type ChatbotResponse = {
   messages?: unknown;
@@ -42,6 +42,21 @@ function normalizeLanguage(value: unknown) {
   return supportedLanguages.has(base) ? base : "pt-BR";
 }
 
+function detectedLanguage(text: string, fallback: string) {
+  const words = new Set(text.normalize("NFKD").replace(/\p{Diacritic}/gu, "").toLocaleLowerCase().match(/\p{L}+/gu) || []);
+  const signals: Record<string, string[]> = {
+    "pt-BR": ["ola", "voce", "como", "qual", "preco", "capina", "eletrica", "obrigado"],
+    en: ["hello", "hi", "what", "where", "how", "price", "weeding", "agriculture", "thanks"],
+    de: ["hallo", "was", "wie", "preis", "unkraut", "landwirtschaft", "danke"],
+    fr: ["bonjour", "salut", "comment", "prix", "desherbage", "agriculture", "merci"],
+    es: ["hola", "como", "precio", "deshierbe", "agricultura", "gracias", "donde"],
+  };
+  const ranked = Object.entries(signals)
+    .map(([language, entries]) => ({ language, score: entries.filter((entry) => words.has(entry)).length }))
+    .sort((left, right) => right.score - left.score);
+  return ranked[0]?.score && ranked[0].score > (ranked[1]?.score || 0) ? ranked[0].language : fallback;
+}
+
 function extractHandoff(messages: string[]) {
   let url = "";
   let protocol: string | null = null;
@@ -61,24 +76,39 @@ function extractHandoff(messages: string[]) {
   };
 }
 
-function demoAnswer(text: string) {
-  const normalized = text.toLocaleLowerCase("pt-BR");
-  if (/pre[cç]o|valor|custa|or[cç]amento/.test(normalized)) {
-    return [
-      "O investimento varia conforme a aplicação, o porte da operação e a configuração necessária. Para orientar você melhor, preciso entender um pouco da sua necessidade.",
-      "Você trabalha mais com agronegócio, área urbana ou outro segmento?",
-    ];
-  }
-  if (/capina|el[eé]tric|como funciona/.test(normalized)) {
-    return [
-      "A tecnologia da Zasso utiliza eletricidade controlada para atuar na planta indesejada, sem a aplicação de herbicidas químicos. A recomendação depende do cultivo e das condições da área.",
-      "Para direcionar melhor, você trabalha com agronegócio, área urbana ou outro segmento?",
-    ];
-  }
-  return [
-    "Esta é uma prévia segura do atendimento web. A conexão com a base de conhecimento será ativada no ambiente da Zasso.",
-    "Para começar a qualificação, você trabalha com agronegócio, área urbana ou outro segmento?",
-  ];
+function demoAnswer(text: string, language: string) {
+  const normalized = text.normalize("NFKD").replace(/\p{Diacritic}/gu, "").toLocaleLowerCase();
+  const topic = /preco|valor|custa|orcamento|price|cost|preis|prix|precio/.test(normalized)
+    ? "price"
+    : /capina|eletric|funciona|weeding|unkraut|desherbage|deshierbe/.test(normalized) ? "technology" : "generic";
+  const answers: Record<string, Record<string, string[]>> = {
+    "pt-BR": {
+      price: ["O investimento varia conforme a aplicação, o porte da operação e a configuração necessária. Para orientar você melhor, preciso entender um pouco da sua necessidade.", "Você trabalha mais com agronegócio, área urbana ou outro segmento?"],
+      technology: ["A tecnologia da Zasso utiliza eletricidade controlada para atuar na planta indesejada, sem a aplicação de herbicidas químicos.", "Para direcionar melhor, você trabalha com agronegócio, área urbana ou outro segmento?"],
+      generic: ["Esta é uma prévia segura do atendimento web.", "Para começar a qualificação, você trabalha com agronegócio, área urbana ou outro segmento?"],
+    },
+    en: {
+      price: ["The investment varies according to the application, operation size and required configuration. I need to understand your needs to guide you properly.", "Do you work mainly in agriculture, an urban area or another segment?"],
+      technology: ["Zasso technology uses controlled electricity to act on unwanted plants, without chemical herbicides.", "To guide you properly, do you work in agriculture, an urban area or another segment?"],
+      generic: ["This is a secure preview of the web assistance.", "To begin, do you work in agriculture, an urban area or another segment?"],
+    },
+    de: {
+      price: ["Die Investition hängt von Anwendung, Betriebsgröße und erforderlicher Konfiguration ab. Für eine passende Beratung benötige ich einige Angaben.", "Arbeiten Sie in der Landwirtschaft, im städtischen Bereich oder in einem anderen Bereich?"],
+      technology: ["Die Zasso-Technologie nutzt kontrollierte Elektrizität, um unerwünschte Pflanzen ohne chemische Herbizide zu behandeln.", "Arbeiten Sie in der Landwirtschaft, im städtischen Bereich oder in einem anderen Bereich?"],
+      generic: ["Dies ist eine sichere Vorschau der Web-Beratung.", "Arbeiten Sie in der Landwirtschaft, im städtischen Bereich oder in einem anderen Bereich?"],
+    },
+    fr: {
+      price: ["L’investissement dépend de l’application, de la taille de l’exploitation et de la configuration nécessaire. J’ai besoin de mieux comprendre votre besoin.", "Travaillez-vous dans l’agriculture, en zone urbaine ou dans un autre secteur ?"],
+      technology: ["La technologie Zasso utilise une électricité contrôlée pour agir sur les plantes indésirables, sans herbicides chimiques.", "Travaillez-vous dans l’agriculture, en zone urbaine ou dans un autre secteur ?"],
+      generic: ["Ceci est un aperçu sécurisé de l’assistance web.", "Travaillez-vous dans l’agriculture, en zone urbaine ou dans un autre secteur ?"],
+    },
+    es: {
+      price: ["La inversión varía según la aplicación, el tamaño de la operación y la configuración necesaria. Necesito comprender mejor su necesidad.", "¿Trabaja en agricultura, en un área urbana o en otro segmento?"],
+      technology: ["La tecnología Zasso utiliza electricidad controlada para actuar sobre las plantas no deseadas, sin herbicidas químicos.", "¿Trabaja en agricultura, en un área urbana o en otro segmento?"],
+      generic: ["Esta es una vista previa segura de la atención web.", "¿Trabaja en agricultura, en un área urbana o en otro segmento?"],
+    },
+  };
+  return (answers[language] || answers[language === "pt-PT" ? "pt-BR" : "pt-BR"])[topic];
 }
 
 export async function POST(request: Request) {
@@ -96,7 +126,7 @@ export async function POST(request: Request) {
 
   const text = clean(body.text, maximumMessageLength + 1);
   const messageId = clean(body.messageId, 220) || crypto.randomUUID();
-  const language = normalizeLanguage(body.language);
+  const language = detectedLanguage(text, normalizeLanguage(body.language));
   const eventType = body.eventType === "web_selection" ? "web_selection" : "message";
   if (!text) return response({ error: "message_required" }, 400);
   if (text.length > maximumMessageLength) {
@@ -120,9 +150,9 @@ export async function POST(request: Request) {
   const apiToken = process.env.CHATBOT_API_TOKEN;
   if (!apiUrl || !apiToken) {
     return response({
-      messages: demoAnswer(text),
+      messages: demoAnswer(text, language),
       language,
-      stage: "demo",
+      stage: "segment",
       qualified: false,
       handoff: null,
       demo: true,

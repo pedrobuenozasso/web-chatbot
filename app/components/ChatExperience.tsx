@@ -2,6 +2,7 @@
 
 import { FormEvent, KeyboardEvent, useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import { normalizeUiLanguage, UI_COPY, type UiLanguage } from "../lib/ui-i18n";
 
 type ChatMessage = {
   id: string;
@@ -21,14 +22,14 @@ type ChatResponse = {
   } | null;
 };
 
-const initialMessages: ChatMessage[] = [
-  {
+function initialMessages(language: UiLanguage): ChatMessage[] {
+  return [{
     id: "welcome",
     role: "assistant",
-    text: "Olá! Agradecemos seu contato com a Zasso. 🌱⚡\n\nSomos pioneiros em Capina Elétrica, uma tecnologia que controla plantas daninhas por meio de energia elétrica, sem o uso de herbicidas.\n\nPara direcionarmos você a um atendimento mais adequado, sobre qual segmento deseja receber informações?",
-    time: "agora",
-  },
-];
+    text: UI_COPY[language].welcome,
+    time: UI_COPY[language].now,
+  }];
+}
 
 function wait(milliseconds: number) {
   return new Promise((resolve) => setTimeout(resolve, milliseconds));
@@ -56,7 +57,9 @@ function newMessage(role: ChatMessage["role"], text: string): ChatMessage {
 }
 
 export function ChatExperience() {
-  const [messages, setMessages] = useState<ChatMessage[]>(initialMessages);
+  const [language, setLanguage] = useState<UiLanguage>("pt-BR");
+  const copy = UI_COPY[language];
+  const [messages, setMessages] = useState<ChatMessage[]>(() => initialMessages("pt-BR"));
   const [draft, setDraft] = useState("");
   const [typing, setTyping] = useState(false);
   const [handoff, setHandoff] = useState<ChatResponse["handoff"]>(null);
@@ -64,6 +67,18 @@ export function ChatExperience() {
   const [resetting, setResetting] = useState(false);
   const [showSegmentOptions, setShowSegmentOptions] = useState(true);
   const endRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const browserLanguage = normalizeUiLanguage(navigator.language);
+    document.documentElement.lang = browserLanguage;
+    const frame = requestAnimationFrame(() => {
+      setLanguage(browserLanguage);
+      setMessages((current) => current.length === 1 && current[0]?.id === "welcome"
+        ? initialMessages(browserLanguage)
+        : current);
+    });
+    return () => cancelAnimationFrame(frame);
+  }, []);
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
@@ -86,12 +101,19 @@ export function ChatExperience() {
           text,
           eventType,
           messageId: crypto.randomUUID(),
-          language: navigator.language || "pt-BR",
+          language,
         }),
       });
 
       const body = (await response.json()) as ChatResponse & { error?: string };
       if (!response.ok) throw new Error(body.error || "Não foi possível responder.");
+
+      const responseLanguage = normalizeUiLanguage(body.language || language);
+      setLanguage(responseLanguage);
+      document.documentElement.lang = responseLanguage;
+      setMessages((current) => current.map((message) => message.id === "welcome"
+        ? { ...message, text: UI_COPY[responseLanguage].welcome, time: UI_COPY[responseLanguage].now }
+        : message));
 
       for (const reply of body.messages) {
         setTyping(true);
@@ -102,9 +124,7 @@ export function ChatExperience() {
       setShowSegmentOptions(body.stage === "segment");
     } catch {
       if (eventType === "web_selection") setShowSegmentOptions(true);
-      setError(
-        "Não consegui concluir essa resposta agora. Aguarde um instante e tente novamente.",
-      );
+      setError(copy.error);
     } finally {
       setTyping(false);
     }
@@ -129,7 +149,7 @@ export function ChatExperience() {
     setError("");
     try {
       await fetch("/api/chat", { method: "DELETE" });
-      setMessages(initialMessages);
+      setMessages(initialMessages(language));
       setHandoff(null);
       setDraft("");
       setShowSegmentOptions(true);
@@ -150,19 +170,16 @@ export function ChatExperience() {
           </span>
           <span className="brand-copy">
             <strong>Electric vegetation control</strong>
-            Tecnologia elétrica para o manejo de plantas
+            {copy.brandSubtitle}
           </span>
         </div>
         <div className="intro-copy">
-          <span className="eyebrow"><i /> Atendimento inteligente</span>
-          <h1>Informação certa para a sua operação.</h1>
-          <p>
-            Converse com a Zasso, tire dúvidas e conte um pouco sobre a sua necessidade.
-            Ao final, seu contexto segue organizado para o time comercial.
-          </p>
+          <span className="eyebrow"><i /> {copy.introEyebrow}</span>
+          <h1>{copy.introTitle}</h1>
+          <p>{copy.introBody}</p>
         </div>
         <div className="trust-row" aria-label="Características do atendimento">
-          <span>Conteúdo aprovado pela Zasso</span>
+          <span>{copy.approvedContent}</span>
           <span>Português · English · Deutsch · Français · Español</span>
         </div>
       </section>
@@ -173,28 +190,28 @@ export function ChatExperience() {
             <Image src="/zasso-logo.png" alt="" width={46} height={44} priority />
           </div>
           <div className="chat-identity">
-            <strong>Atendimento Zasso</strong>
-            <span><i /> disponível agora</span>
+            <strong>{copy.supportName}</strong>
+            <span><i /> {copy.available}</span>
           </div>
           <button
             className="reset-button"
             type="button"
             onClick={resetConversation}
             disabled={typing || resetting}
-            aria-label="Reiniciar conversa"
-            title="Reiniciar conversa"
+            aria-label={copy.restart}
+            title={copy.restart}
           >
-            Reiniciar
+            {copy.restart}
           </button>
         </header>
 
         <div className="privacy-note">
           <span aria-hidden="true">●</span>
-          Atendimento seguro. Evite enviar dados pessoais sensíveis.
+          {copy.privacy}
         </div>
 
         <div className="message-list" aria-live="polite" aria-busy={typing}>
-          <div className="day-marker">Hoje</div>
+          <div className="day-marker">{copy.today}</div>
           {messages.map((message) => (
             <article
               className={`message-bubble ${message.role}`}
@@ -206,18 +223,18 @@ export function ChatExperience() {
           ))}
 
           {showSegmentOptions ? (
-            <div className="quick-replies" aria-label="Escolha seu segmento">
-              <button type="button" onClick={() => void sendMessage("Agro", "web_selection")} disabled={typing}>
-                <span aria-hidden="true">🌾</span> Agro
+            <div className="quick-replies" aria-label={copy.segmentLabel}>
+              <button type="button" onClick={() => void sendMessage(copy.agro, "web_selection")} disabled={typing}>
+                <span aria-hidden="true">🌾</span> {copy.agro}
               </button>
-              <button type="button" onClick={() => void sendMessage("Área urbana", "web_selection")} disabled={typing}>
-                <span aria-hidden="true">🏙️</span> Área urbana
+              <button type="button" onClick={() => void sendMessage(copy.urban, "web_selection")} disabled={typing}>
+                <span aria-hidden="true">🏙️</span> {copy.urban}
               </button>
             </div>
           ) : null}
 
           {typing ? (
-            <div className="typing-bubble" aria-label="Atendimento está digitando">
+            <div className="typing-bubble" aria-label={copy.typing}>
               <span />
               <span />
               <span />
@@ -226,17 +243,17 @@ export function ChatExperience() {
 
           {handoff?.url ? (
             <article className="handoff-card">
-              <span className="handoff-kicker"><i /> Triagem concluída</span>
-              <strong>Seu atendimento pode continuar com uma pessoa do nosso time.</strong>
-              <p>Seu resumo já está preparado para você não precisar repetir tudo.</p>
-              <a href={handoff.url} target="_blank" rel="noreferrer" aria-label="Falar com o time comercial pelo WhatsApp">
+              <span className="handoff-kicker"><i /> {copy.handoffKicker}</span>
+              <strong>{copy.handoffTitle}</strong>
+              <p>{copy.handoffBody}</p>
+              <a href={handoff.url} target="_blank" rel="noreferrer" aria-label={copy.commercialButton}>
                 <span className="whatsapp-action-copy">
                   <span className="whatsapp-mark" aria-hidden="true">W</span>
-                  <span><strong>Falar com o time comercial</strong><small>Abrir no WhatsApp</small></span>
+                  <span><strong>{copy.commercialButton}</strong><small>{copy.openWhatsApp}</small></span>
                 </span>
                 <span className="action-arrow" aria-hidden="true">↗</span>
               </a>
-              {handoff.protocol ? <small>Protocolo {handoff.protocol}</small> : null}
+              {handoff.protocol ? <small>{copy.protocol} {handoff.protocol}</small> : null}
             </article>
           ) : null}
 
@@ -246,8 +263,8 @@ export function ChatExperience() {
 
         <form className="composer" onSubmit={submitMessage}>
           <textarea
-            aria-label="Mensagem"
-            placeholder="Digite sua mensagem..."
+            aria-label={copy.messageLabel}
+            placeholder={copy.placeholder}
             value={draft}
             onChange={(event) => setDraft(event.target.value.slice(0, 800))}
             onKeyDown={handleComposerKeyDown}
@@ -257,13 +274,13 @@ export function ChatExperience() {
           <button
             type="submit"
             disabled={!draft.trim() || typing}
-            aria-label="Enviar mensagem"
+            aria-label={copy.send}
           >
             <span aria-hidden="true">→</span>
           </button>
         </form>
         <footer className="chat-footer">
-          Ao continuar, você concorda com o uso dos dados para este atendimento.
+          {copy.consent}
         </footer>
       </section>
     </main>
