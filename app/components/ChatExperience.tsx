@@ -69,18 +69,6 @@ export function ChatExperience() {
   const endRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const browserLanguage = normalizeUiLanguage(navigator.language);
-    document.documentElement.lang = browserLanguage;
-    const frame = requestAnimationFrame(() => {
-      setLanguage(browserLanguage);
-      setMessages((current) => current.length === 1 && current[0]?.id === "welcome"
-        ? initialMessages(browserLanguage)
-        : current);
-    });
-    return () => cancelAnimationFrame(frame);
-  }, []);
-
-  useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
   }, [messages, typing, handoff]);
 
@@ -149,7 +137,9 @@ export function ChatExperience() {
     setError("");
     try {
       await fetch("/api/chat", { method: "DELETE" });
-      setMessages(initialMessages(language));
+      setLanguage("pt-BR");
+      document.documentElement.lang = "pt-BR";
+      setMessages(initialMessages("pt-BR"));
       setHandoff(null);
       setDraft("");
       setShowSegmentOptions(true);
