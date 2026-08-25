@@ -24,7 +24,7 @@ const initialMessages: ChatMessage[] = [
   {
     id: "welcome",
     role: "assistant",
-    text: "Bem-vindo ao atendimento da Zasso. Escreva sua dúvida para começarmos.",
+    text: "Olá! Agradecemos seu contato com a Zasso. 🌱⚡\n\nSomos pioneiros em Capina Elétrica, uma tecnologia que controla plantas daninhas por meio de energia elétrica, sem o uso de herbicidas.\n\nPara direcionarmos você a um atendimento mais adequado, sobre qual segmento deseja receber informações?",
     time: "agora",
   },
 ];
@@ -61,19 +61,19 @@ export function ChatExperience() {
   const [handoff, setHandoff] = useState<ChatResponse["handoff"]>(null);
   const [error, setError] = useState("");
   const [resetting, setResetting] = useState(false);
+  const [showSegmentOptions, setShowSegmentOptions] = useState(true);
   const endRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
   }, [messages, typing, handoff]);
 
-  async function submitMessage(event?: FormEvent) {
-    event?.preventDefault();
-    const text = draft.trim();
+  async function sendMessage(text: string, eventType: "message" | "web_selection" = "message") {
     if (!text || typing || text.length > 800) return;
 
     setDraft("");
     setError("");
+    setShowSegmentOptions(false);
     setMessages((current) => [...current, newMessage("user", text)]);
     setTyping(true);
 
@@ -83,6 +83,7 @@ export function ChatExperience() {
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
           text,
+          eventType,
           messageId: crypto.randomUUID(),
           language: navigator.language || "pt-BR",
         }),
@@ -106,6 +107,12 @@ export function ChatExperience() {
     }
   }
 
+  async function submitMessage(event?: FormEvent) {
+    event?.preventDefault();
+    const text = draft.trim();
+    await sendMessage(text);
+  }
+
   function handleComposerKeyDown(event: KeyboardEvent<HTMLTextAreaElement>) {
     if (event.key === "Enter" && !event.shiftKey) {
       event.preventDefault();
@@ -122,6 +129,7 @@ export function ChatExperience() {
       setMessages(initialMessages);
       setHandoff(null);
       setDraft("");
+      setShowSegmentOptions(true);
     } finally {
       setResetting(false);
     }
@@ -187,6 +195,17 @@ export function ChatExperience() {
               <time>{message.time}</time>
             </article>
           ))}
+
+          {showSegmentOptions ? (
+            <div className="quick-replies" aria-label="Escolha seu segmento">
+              <button type="button" onClick={() => void sendMessage("Agro", "web_selection")} disabled={typing}>
+                <span aria-hidden="true">🌾</span> Agro
+              </button>
+              <button type="button" onClick={() => void sendMessage("Área urbana", "web_selection")} disabled={typing}>
+                <span aria-hidden="true">🏙️</span> Área urbana
+              </button>
+            </div>
+          ) : null}
 
           {typing ? (
             <div className="typing-bubble" aria-label="Atendimento está digitando">

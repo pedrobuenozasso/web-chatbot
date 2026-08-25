@@ -97,6 +97,7 @@ export async function POST(request: Request) {
   const text = clean(body.text, maximumMessageLength + 1);
   const messageId = clean(body.messageId, 220) || crypto.randomUUID();
   const language = normalizeLanguage(body.language);
+  const eventType = body.eventType === "web_selection" ? "web_selection" : "message";
   if (!text) return response({ error: "message_required" }, 400);
   if (text.length > maximumMessageLength) {
     return response({ error: "message_too_long" }, 400);
@@ -136,7 +137,7 @@ export async function POST(request: Request) {
         "content-type": "application/json",
       },
       body: JSON.stringify({
-        eventType: "message",
+        eventType,
         conversationId: `web:${conversationId}`,
         messageId,
         text,
