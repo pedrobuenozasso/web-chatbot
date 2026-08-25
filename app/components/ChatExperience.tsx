@@ -238,7 +238,9 @@ export function ChatExperience() {
               <p>{copy.handoffBody}</p>
               <a href={handoff.url} target="_blank" rel="noreferrer" aria-label={copy.commercialButton}>
                 <span className="whatsapp-action-copy">
-                  <span className="whatsapp-mark" aria-hidden="true">W</span>
+                  <span className="whatsapp-mark" aria-hidden="true">
+                    <Image src="/zasso-logo.png" alt="" width={38} height={38} />
+                  </span>
                   <span><strong>{copy.commercialButton}</strong><small>{copy.openWhatsApp}</small></span>
                 </span>
                 <span className="action-arrow" aria-hidden="true">↗</span>

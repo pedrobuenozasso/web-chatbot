@@ -497,9 +497,14 @@ body {
 .whatsapp-mark {
   width: 38px;
   height: 38px;
+  overflow: hidden;
   border-radius: 13px;
-  font-size: 13px;
-  font-weight: 800;
+}
+
+.whatsapp-mark img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .action-arrow {
