@@ -98,7 +98,9 @@ export function ChatExperience() {
         setMessages((current) => [...current, newMessage("assistant", reply)]);
       }
       setHandoff(body.handoff || null);
+      setShowSegmentOptions(body.stage === "segment");
     } catch {
+      if (eventType === "web_selection") setShowSegmentOptions(true);
       setError(
         "Não consegui concluir essa resposta agora. Aguarde um instante e tente novamente.",
       );
