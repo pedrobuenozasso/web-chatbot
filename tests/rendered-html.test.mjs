@@ -16,7 +16,7 @@ test("define a experiência de atendimento Zasso", async () => {
   assert.match(layout, /Atendimento Zasso/);
   assert.match(component, /UI_COPY/);
   assert.match(translations, /Digite sua mensagem/);
-  assert.match(translations, /Reiniciar/);
+  assert.doesNotMatch(component, /reset-button/);
   assert.match(translations, /Type your message/);
   assert.match(translations, /Nachricht eingeben/);
   assert.match(translations, /Écrivez votre message/);

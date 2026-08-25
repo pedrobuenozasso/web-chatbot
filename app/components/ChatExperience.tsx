@@ -64,7 +64,6 @@ export function ChatExperience() {
   const [typing, setTyping] = useState(false);
   const [handoff, setHandoff] = useState<ChatResponse["handoff"]>(null);
   const [error, setError] = useState("");
-  const [resetting, setResetting] = useState(false);
   const [showSegmentOptions, setShowSegmentOptions] = useState(true);
   const endRef = useRef<HTMLDivElement>(null);
 
@@ -131,38 +130,12 @@ export function ChatExperience() {
     }
   }
 
-  async function resetConversation() {
-    if (typing || resetting) return;
-    setResetting(true);
-    setError("");
-    try {
-      await fetch("/api/chat", { method: "DELETE" });
-      setLanguage("pt-BR");
-      document.documentElement.lang = "pt-BR";
-      setMessages(initialMessages("pt-BR"));
-      setHandoff(null);
-      setDraft("");
-      setShowSegmentOptions(true);
-    } finally {
-      setResetting(false);
-    }
-  }
-
   return (
     <main className="site-shell">
       <div className="ambient ambient-one" aria-hidden="true" />
       <div className="ambient ambient-two" aria-hidden="true" />
 
       <section className="intro" aria-label="Apresentação">
-        <div className="brand-lockup" aria-label="Zasso">
-          <span className="brand-image">
-            <Image src="/zasso-logo.png" alt="Zasso" width={72} height={68} priority />
-          </span>
-          <span className="brand-copy">
-            <strong>Electric vegetation control</strong>
-            {copy.brandSubtitle}
-          </span>
-        </div>
         <div className="intro-copy">
           <span className="eyebrow"><i /> {copy.introEyebrow}</span>
           <h1>{copy.introTitle}</h1>
@@ -183,16 +156,6 @@ export function ChatExperience() {
             <strong>{copy.supportName}</strong>
             <span><i /> {copy.available}</span>
           </div>
-          <button
-            className="reset-button"
-            type="button"
-            onClick={resetConversation}
-            disabled={typing || resetting}
-            aria-label={copy.restart}
-            title={copy.restart}
-          >
-            {copy.restart}
-          </button>
         </header>
 
         <div className="privacy-note">

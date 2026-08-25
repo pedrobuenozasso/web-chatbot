@@ -60,7 +60,8 @@ body {
   align-self: center;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: center;
+  gap: 32px;
   padding-block: 18px;
 }
 
@@ -115,7 +116,7 @@ body {
 }
 
 .intro-copy {
-  margin-block: auto;
+  margin-block: 0;
 }
 
 .eyebrow {
