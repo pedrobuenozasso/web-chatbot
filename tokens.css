@@ -1,0 +1,26 @@
+:root {
+  --color-paper: oklch(97% 0.012 145);
+  --color-paper-deep: oklch(93% 0.018 145);
+  --color-ink: oklch(18% 0.018 145);
+  --color-ink-soft: oklch(42% 0.018 145);
+  --color-muted: oklch(53% 0.014 145);
+  --color-rule: oklch(78% 0.026 145);
+  --color-rule-soft: oklch(88% 0.018 145);
+  --color-accent: oklch(55% 0.155 145);
+  --color-accent-deep: oklch(33% 0.095 145);
+  --color-accent-soft: oklch(91% 0.06 145);
+  --color-focus: oklch(63% 0.19 145);
+  --color-danger: oklch(48% 0.12 28);
+  --color-danger-soft: oklch(93% 0.035 28);
+  --color-on-dark: oklch(97% 0.01 145);
+  --material-glass: oklch(99% 0.008 145 / 0.68);
+  --material-glass-thick: oklch(99% 0.008 145 / 0.84);
+  --material-glass-dark: oklch(25% 0.045 145 / 0.92);
+  --material-highlight: oklch(100% 0.006 145 / 0.8);
+  --shadow-glass: 0 32px 80px oklch(26% 0.05 145 / 0.16), 0 2px 8px oklch(26% 0.04 145 / 0.06);
+  --shadow-soft: 0 12px 32px oklch(26% 0.04 145 / 0.1);
+  --radius-shell: 34px;
+  --radius-panel: 24px;
+  --radius-control: 16px;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+}

@@ -1,0 +1,16 @@
+[
+  {
+    "date": "2026-08-25",
+    "verb": "redesign",
+    "genre": "modern-minimal",
+    "macrostructure": "Workbench",
+    "theme": "custom Zasso Liquid Glass",
+    "axes": {
+      "paper": "light",
+      "display": "system-native",
+      "accent": "chromatic-green ~145°"
+    },
+    "enrichment": "customer-supplied Zasso logo",
+    "studied": false
+  }
+]

@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+import "../tokens.css";
 import "./globals.css";
+import "./chat-glass.css";
 
 export const metadata: Metadata = {
   title: "Atendimento Zasso",

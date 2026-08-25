@@ -1,0 +1,8 @@
+{
+  "verb": "redesign",
+  "project": "Next.js 16 App Router",
+  "entry": "app/components/ChatExperience.tsx",
+  "styling": ["app/globals.css", "app/chat-glass.css", "tokens.css"],
+  "preserve": ["chat flow", "RAG integration", "API routes", "legal pages"],
+  "theme": "custom Zasso Liquid Glass"
+}

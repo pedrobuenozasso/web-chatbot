@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, KeyboardEvent, useEffect, useRef, useState } from "react";
+import Image from "next/image";
 
 type ChatMessage = {
   id: string;
@@ -144,30 +145,36 @@ export function ChatExperience() {
 
       <section className="intro" aria-label="Apresentação">
         <div className="brand-lockup" aria-label="Zasso">
-          <span className="brand-mark">zasso</span>
-          <span className="brand-divider" />
-          <span className="brand-copy">Tecnologia elétrica para o manejo de plantas</span>
+          <span className="brand-image">
+            <Image src="/zasso-logo.png" alt="Zasso" width={72} height={68} priority />
+          </span>
+          <span className="brand-copy">
+            <strong>Electric vegetation control</strong>
+            Tecnologia elétrica para o manejo de plantas
+          </span>
         </div>
         <div className="intro-copy">
-          <span className="eyebrow">Atendimento virtual</span>
-          <h1>Vamos entender o que sua operação precisa.</h1>
+          <span className="eyebrow"><i /> Atendimento inteligente</span>
+          <h1>Informação certa para a sua operação.</h1>
           <p>
-            Tire suas dúvidas sobre a tecnologia Zasso. Ao final, organizamos as
-            informações para você continuar diretamente com nosso time comercial.
+            Converse com a Zasso, tire dúvidas e conte um pouco sobre a sua necessidade.
+            Ao final, seu contexto segue organizado para o time comercial.
           </p>
         </div>
         <div className="trust-row" aria-label="Características do atendimento">
-          <span><i /> Respostas baseadas em conteúdo aprovado</span>
-          <span><i /> Atendimento em cinco idiomas</span>
+          <span>Conteúdo aprovado pela Zasso</span>
+          <span>Português · English · Deutsch · Français · Español</span>
         </div>
       </section>
 
       <section className="chat-card" aria-label="Chat de atendimento Zasso">
         <header className="chat-header">
-          <div className="avatar" aria-hidden="true">zasso</div>
+          <div className="avatar" aria-hidden="true">
+            <Image src="/zasso-logo.png" alt="" width={46} height={44} priority />
+          </div>
           <div className="chat-identity">
             <strong>Atendimento Zasso</strong>
-            <span><i /> online</span>
+            <span><i /> disponível agora</span>
           </div>
           <button
             className="reset-button"
@@ -219,11 +226,15 @@ export function ChatExperience() {
 
           {handoff?.url ? (
             <article className="handoff-card">
-              <span className="handoff-kicker">Triagem concluída</span>
-              <strong>Pronto para conversar com nosso time?</strong>
+              <span className="handoff-kicker"><i /> Triagem concluída</span>
+              <strong>Seu atendimento pode continuar com uma pessoa do nosso time.</strong>
               <p>Seu resumo já está preparado para você não precisar repetir tudo.</p>
-              <a href={handoff.url} target="_blank" rel="noreferrer">
-                Continuar no WhatsApp <span aria-hidden="true">↗</span>
+              <a href={handoff.url} target="_blank" rel="noreferrer" aria-label="Falar com o time comercial pelo WhatsApp">
+                <span className="whatsapp-action-copy">
+                  <span className="whatsapp-mark" aria-hidden="true">W</span>
+                  <span><strong>Falar com o time comercial</strong><small>Abrir no WhatsApp</small></span>
+                </span>
+                <span className="action-arrow" aria-hidden="true">↗</span>
               </a>
               {handoff.protocol ? <small>Protocolo {handoff.protocol}</small> : null}
             </article>
