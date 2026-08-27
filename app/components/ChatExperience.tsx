@@ -235,7 +235,14 @@ export function ChatExperience() {
           </button>
         </form>
         <footer className="chat-footer">
-          {copy.consent}
+          <span>{copy.consent}</span>{" "}
+          <a
+            href="https://zasso.com/politica-de-privacidade/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {copy.privacyPolicy}
+          </a>
         </footer>
       </section>
     </main>
