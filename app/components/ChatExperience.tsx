@@ -199,7 +199,7 @@ export function ChatExperience() {
               <span className="handoff-kicker"><i /> {copy.handoffKicker}</span>
               <strong>{copy.handoffTitle}</strong>
               <p>{copy.handoffBody}</p>
-              <a href={handoff.url} target="_blank" rel="noreferrer" aria-label={copy.commercialButton}>
+              <a className="commercial-action" href={handoff.url} target="_blank" rel="noreferrer" aria-label={copy.commercialButton}>
                 <span className="whatsapp-action-copy">
                   <span className="whatsapp-mark" aria-hidden="true">
                     <Image src="/zasso-logo.png" alt="" width={38} height={38} />
@@ -208,6 +208,16 @@ export function ChatExperience() {
                 </span>
                 <span className="action-arrow" aria-hidden="true">↗</span>
               </a>
+              <p className="handoff-consent">
+                {copy.handoffConsent}{" "}
+                <a
+                  href="https://zasso.com/politica-de-privacidade/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {copy.privacyPolicy}
+                </a>.
+              </p>
               {handoff.protocol ? <small>{copy.protocol} {handoff.protocol}</small> : null}
             </article>
           ) : null}
