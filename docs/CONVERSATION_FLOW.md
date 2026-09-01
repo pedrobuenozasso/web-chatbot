@@ -7,7 +7,10 @@
 5. Para agro, coleta cultivo/aplicação e área aproximada em hectares.
 6. Para urbano, coleta prefeitura, prestador de serviços ou outro perfil.
 7. Ao concluir, gera protocolo e resumo com os campos confirmados.
-8. A interface apresenta o botão para continuar com o comercial.
+8. A interface apresenta o botão para continuar com o comercial pelo WhatsApp
+   e, quando configurado, um segundo botão para marcar uma reunião na agenda
+   do time correspondente (Agro ou Comercial), conforme o segmento escolhido
+   no início da conversa.
 
 O bot faz uma pergunta por vez. Se o lead fizer uma pergunta enquanto existe um
 campo pendente, a dúvida é respondida e a pergunta de qualificação é retomada.

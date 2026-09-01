@@ -56,6 +56,17 @@ function newMessage(role: ChatMessage["role"], text: string): ChatMessage {
   };
 }
 
+type LeadSegment = "agro" | "comercial";
+
+// Links de agenda por segmento. Configuráveis por variável de ambiente para
+// evitar link fixo no código; o botão só aparece quando o link existir.
+// TODO: mover para o backend (junto com o handoff do WhatsApp) quando a
+// agenda (ex.: Odoo) estiver decidida, para não duplicar regra no frontend.
+const MEETING_URL_BY_SEGMENT: Record<LeadSegment, string | undefined> = {
+  agro: process.env.NEXT_PUBLIC_MEETING_URL_AGRO || process.env.NEXT_PUBLIC_MEETING_URL_COMERCIAL,
+  comercial: process.env.NEXT_PUBLIC_MEETING_URL_COMERCIAL,
+};
+
 export function ChatExperience() {
   const [language, setLanguage] = useState<UiLanguage>("pt-BR");
   const copy = UI_COPY[language];
@@ -65,7 +76,9 @@ export function ChatExperience() {
   const [handoff, setHandoff] = useState<ChatResponse["handoff"]>(null);
   const [error, setError] = useState("");
   const [showSegmentOptions, setShowSegmentOptions] = useState(true);
+  const [segment, setSegment] = useState<LeadSegment>("comercial");
   const endRef = useRef<HTMLDivElement>(null);
+  const meetingUrl = MEETING_URL_BY_SEGMENT[segment];
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
@@ -177,10 +190,24 @@ export function ChatExperience() {
 
           {showSegmentOptions ? (
             <div className="quick-replies" aria-label={copy.segmentLabel}>
-              <button type="button" onClick={() => void sendMessage(copy.agro, "web_selection")} disabled={typing}>
+              <button
+                type="button"
+                onClick={() => {
+                  setSegment("agro");
+                  void sendMessage(copy.agro, "web_selection");
+                }}
+                disabled={typing}
+              >
                 <span aria-hidden="true">🌾</span> {copy.agro}
               </button>
-              <button type="button" onClick={() => void sendMessage(copy.urban, "web_selection")} disabled={typing}>
+              <button
+                type="button"
+                onClick={() => {
+                  setSegment("comercial");
+                  void sendMessage(copy.urban, "web_selection");
+                }}
+                disabled={typing}
+              >
                 <span aria-hidden="true">🏙️</span> {copy.urban}
               </button>
             </div>
@@ -208,6 +235,21 @@ export function ChatExperience() {
                 </span>
                 <span className="action-arrow" aria-hidden="true">↗</span>
               </a>
+              {meetingUrl ? (
+                <a
+                  className="commercial-action meeting-action"
+                  href={meetingUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label={copy.meetingButton}
+                >
+                  <span className="whatsapp-action-copy">
+                    <span className="whatsapp-mark meeting-mark" aria-hidden="true">📅</span>
+                    <span><strong>{copy.meetingButton}</strong><small>{copy.openMeeting}</small></span>
+                  </span>
+                  <span className="action-arrow" aria-hidden="true">↗</span>
+                </a>
+              ) : null}
               <p className="handoff-consent">
                 {copy.handoffConsent}{" "}
                 <a
