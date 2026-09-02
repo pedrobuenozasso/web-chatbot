@@ -13,10 +13,18 @@
 ```text
 CHATBOT_API_URL=https://endpoint-seguro-da-zasso
 CHATBOT_API_TOKEN=<segredo-longo-compartilhado-com-o-backend>
+
+# Opcionais: botão "Marcar reunião" ao final da triagem.
+NEXT_PUBLIC_MEETING_URL_AGRO=<link-de-agenda-do-time-agro>
+NEXT_PUBLIC_MEETING_URL_COMERCIAL=<link-de-agenda-do-time-comercial>
 ```
 
 O token não pode usar prefixo `NEXT_PUBLIC_`, aparecer em arquivos versionados
 ou ser enviado ao navegador.
+
+Os links de agenda são públicos (o link do calendário em si), por isso podem
+usar `NEXT_PUBLIC_`. Sem eles configurados, o app funciona normalmente e só
+não exibe o botão de reunião.
 
 ## Publicação segura
 

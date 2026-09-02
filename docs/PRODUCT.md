@@ -20,6 +20,8 @@ abre o WhatsApp do comercial com um resumo curto já preenchido.
 - qualificação agro e urbana;
 - interrupção inteligente: responder nova dúvida e retomar a pergunta pendente;
 - handoff por botão para WhatsApp;
+- handoff por botão para marcar reunião (agenda por segmento Agro/Comercial),
+  quando configurado;
 - retenção de conversa conforme a política de 15 dias do backend;
 - layout acessível e responsivo.
 

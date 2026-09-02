@@ -515,6 +515,29 @@ body {
   font-size: 16px;
 }
 
+.handoff-card > a.commercial-action.meeting-action {
+  color: var(--color-ink);
+  background: var(--material-glass);
+  border: 1px solid var(--color-rule);
+  box-shadow: var(--shadow-soft);
+}
+
+.handoff-card > a.commercial-action.meeting-action:hover {
+  background: var(--material-glass-thick);
+  box-shadow: 0 16px 30px oklch(26% 0.04 145 / 0.16);
+  filter: none;
+}
+
+.meeting-action .whatsapp-action-copy small {
+  color: var(--color-ink-soft);
+}
+
+.meeting-mark {
+  font-size: 18px;
+  background: var(--color-accent-soft);
+  border-color: var(--color-rule);
+}
+
 .handoff-card > small {
   color: var(--color-muted);
   font-size: 10px;
