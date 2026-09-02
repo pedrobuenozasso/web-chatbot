@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "privacy": {
+    "allowed": ["utm_*", "campaign_id", "adset_id", "ad_id", "fbclid", "landing_path", "referrer_host"],
+    "never_collect": ["name", "email", "phone", "ip_address", "message_content"]
+  },
+  "events": [
+    { "name": "chatbot_opened", "meaning": "A session opened the Zasso web chatbot." },
+    { "name": "chat_started", "meaning": "The session sent its first message; derived from the conversation record." },
+    { "name": "lead_qualified", "meaning": "The triage reached qualification; derived from the lead record." },
+    { "name": "commercial_handoff", "meaning": "A commercial handoff was generated; derived from the handoff record." },
+    { "name": "commercial_click", "meaning": "The visitor clicked the commercial contact action." }
+  ]
+}
