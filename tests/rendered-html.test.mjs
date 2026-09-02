@@ -37,8 +37,18 @@ test("mantém segredos fora do bundle cliente", async () => {
 });
 
 test("usa integração privada no servidor", async () => {
-  const route = await readFile(new URL("app/api/chat/route.ts", root), "utf8");
+  const [route, attributionRoute, attribution] = await Promise.all([
+    readFile(new URL("app/api/chat/route.ts", root), "utf8"),
+    readFile(new URL("app/api/attribution/route.ts", root), "utf8"),
+    readFile(new URL("app/lib/campaign-attribution.ts", root), "utf8"),
+  ]);
   assert.match(route, /process\.env\.CHATBOT_API_TOKEN/);
   assert.match(route, /httpOnly:\s*true/);
   assert.match(route, /channel:\s*"web"/);
+  assert.match(route, /attribution:\s*body\.attribution/);
+  assert.match(attributionRoute, /\/v1\/attribution/);
+  assert.match(attributionRoute, /httpOnly:\s*true/);
+  assert.match(attribution, /utm_campaign/);
+  assert.match(attribution, /campaign_id/);
+  assert.doesNotMatch(attribution, /readParam\(parameters, "(?:phone|email|first_name)"/i);
 });

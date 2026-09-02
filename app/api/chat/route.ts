@@ -188,6 +188,7 @@ export async function POST(request: Request) {
         firstName: "",
         language,
         channel: "web",
+        attribution: body.attribution,
       }),
       signal: AbortSignal.timeout(120_000),
       cache: "no-store",

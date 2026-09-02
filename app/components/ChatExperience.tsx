@@ -3,6 +3,7 @@
 import { FormEvent, KeyboardEvent, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { normalizeUiLanguage, UI_COPY, type UiLanguage } from "../lib/ui-i18n";
+import { campaignAttributionFromBrowser, type CampaignAttribution } from "../lib/campaign-attribution";
 
 type ChatMessage = {
   id: string;
@@ -97,6 +98,17 @@ export function ChatExperience() {
   const [segment, setSegment] = useState<LeadSegment>("comercial");
   const endRef = useRef<HTMLDivElement>(null);
   const meetingUrl = withMeetingSummary(MEETING_URL_BY_SEGMENT[segment], handoff?.summary);
+  const attribution = useRef<CampaignAttribution | undefined>(undefined);
+
+  useEffect(() => {
+    attribution.current = campaignAttributionFromBrowser(window.location, document.referrer);
+    void fetch("/api/attribution", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ eventName: "chatbot_opened", attribution: attribution.current }),
+      keepalive: true,
+    });
+  }, []);
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
@@ -120,6 +132,7 @@ export function ChatExperience() {
           eventType,
           messageId: crypto.randomUUID(),
           language,
+          attribution: attribution.current,
         }),
       });
 
@@ -244,7 +257,12 @@ export function ChatExperience() {
               <span className="handoff-kicker"><i /> {copy.handoffKicker}</span>
               <strong>{copy.handoffTitle}</strong>
               <p>{copy.handoffBody}</p>
-              <a className="commercial-action" href={handoff.url} target="_blank" rel="noreferrer" aria-label={copy.commercialButton}>
+              <a className="commercial-action" href={handoff.url} target="_blank" rel="noreferrer" aria-label={copy.commercialButton} onClick={() => {
+                void fetch("/api/attribution", {
+                  method: "POST", headers: { "content-type": "application/json" },
+                  body: JSON.stringify({ eventName: "commercial_click", attribution: attribution.current }), keepalive: true,
+                });
+              }}>
                 <span className="whatsapp-action-copy">
                   <span className="whatsapp-mark" aria-hidden="true">
                     <Image src="/zasso-logo.png" alt="" width={38} height={38} />
