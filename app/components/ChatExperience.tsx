@@ -19,6 +19,7 @@ type ChatResponse = {
   handoff?: {
     url: string;
     protocol?: string | null;
+    summary?: string | null;
   } | null;
 };
 
@@ -67,6 +68,23 @@ const MEETING_URL_BY_SEGMENT: Record<LeadSegment, string | undefined> = {
   comercial: process.env.NEXT_PUBLIC_MEETING_URL_COMERCIAL,
 };
 
+// Anexa o resumo da triagem (região, cultivo/hectares ou perfil urbano) como
+// resposta pré-preenchida da primeira pergunta personalizada do Calendly, se
+// o link tiver uma. Assim quem recebe a reunião já sabe como começar a
+// conversa, sem precisar reconfigurar nada no backend. Se o Calendly não
+// tiver essa pergunta configurada, o parâmetro é só ignorado — não quebra.
+function withMeetingSummary(url: string | undefined, summary: string | null | undefined) {
+  if (!url) return url;
+  if (!summary) return url;
+  try {
+    const target = new URL(url);
+    target.searchParams.set("a1", summary);
+    return target.toString();
+  } catch {
+    return url;
+  }
+}
+
 export function ChatExperience() {
   const [language, setLanguage] = useState<UiLanguage>("pt-BR");
   const copy = UI_COPY[language];
@@ -78,7 +96,7 @@ export function ChatExperience() {
   const [showSegmentOptions, setShowSegmentOptions] = useState(true);
   const [segment, setSegment] = useState<LeadSegment>("comercial");
   const endRef = useRef<HTMLDivElement>(null);
-  const meetingUrl = MEETING_URL_BY_SEGMENT[segment];
+  const meetingUrl = withMeetingSummary(MEETING_URL_BY_SEGMENT[segment], handoff?.summary);
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });

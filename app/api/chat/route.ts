@@ -57,6 +57,20 @@ function detectedLanguage(text: string, fallback: string) {
   return ranked[0]?.score && ranked[0].score > (ranked[1]?.score || 0) ? ranked[0].language : fallback;
 }
 
+function summaryFromWhatsAppUrl(url: string) {
+  // O backend já monta um resumo da triagem (região, cultivo/área ou perfil
+  // urbano etc.) no parâmetro ?text= do link do WhatsApp. Reaproveitamos o
+  // mesmo texto para preencher a pergunta personalizada da reunião (Calendly),
+  // em vez de duplicar essa regra de conversa aqui.
+  const match = url.match(/[?&]text=([^&\s]*)/i);
+  if (!match) return null;
+  try {
+    return clean(decodeURIComponent(match[1]), 500) || null;
+  } catch {
+    return null;
+  }
+}
+
 function extractHandoff(messages: string[]) {
   let url = "";
   let protocol: string | null = null;
@@ -72,7 +86,7 @@ function extractHandoff(messages: string[]) {
 
   return {
     messages: cleanedMessages,
-    handoff: url ? { url, protocol } : null,
+    handoff: url ? { url, protocol, summary: summaryFromWhatsAppUrl(url) } : null,
   };
 }
 
