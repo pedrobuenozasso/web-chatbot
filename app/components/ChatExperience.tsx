@@ -4,6 +4,7 @@ import { FormEvent, KeyboardEvent, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { normalizeUiLanguage, UI_COPY, type UiLanguage } from "../lib/ui-i18n";
 import { campaignAttributionFromBrowser, type CampaignAttribution } from "../lib/campaign-attribution";
+import { trackMetaPixelEvent } from "../lib/meta-pixel";
 
 type ChatMessage = {
   id: string;
@@ -95,10 +96,11 @@ export function ChatExperience() {
   const [handoff, setHandoff] = useState<ChatResponse["handoff"]>(null);
   const [error, setError] = useState("");
   const [showSegmentOptions, setShowSegmentOptions] = useState(true);
-  const [segment, setSegment] = useState<LeadSegment>("comercial");
+  const [segment, setSegment] = useState<LeadSegment | null>(null);
   const endRef = useRef<HTMLDivElement>(null);
-  const meetingUrl = withMeetingSummary(MEETING_URL_BY_SEGMENT[segment], handoff?.summary);
+  const meetingUrl = withMeetingSummary(segment ? MEETING_URL_BY_SEGMENT[segment] : undefined, handoff?.summary);
   const attribution = useRef<CampaignAttribution | undefined>(undefined);
+  const conversationStarted = useRef(false);
 
   useEffect(() => {
     attribution.current = campaignAttributionFromBrowser(window.location, document.referrer);
@@ -114,8 +116,24 @@ export function ChatExperience() {
     endRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
   }, [messages, typing, handoff]);
 
-  async function sendMessage(text: string, eventType: "message" | "web_selection" = "message") {
+  function trackConversationStarted(selectedSegment?: LeadSegment | null) {
+    if (conversationStarted.current) return;
+    conversationStarted.current = true;
+    const parameters: Record<string, string> = {
+      content_name: "Chatbot conversation started",
+    };
+    if (selectedSegment) parameters.segment = selectedSegment === "agro" ? "agro" : "urban";
+    trackMetaPixelEvent("Contact", parameters);
+  }
+
+  async function sendMessage(
+    text: string,
+    eventType: "message" | "web_selection" = "message",
+    selectedSegment: LeadSegment | null = segment,
+  ) {
     if (!text || typing || text.length > 800) return;
+
+    trackConversationStarted(selectedSegment);
 
     setDraft("");
     setError("");
@@ -164,7 +182,7 @@ export function ChatExperience() {
   async function submitMessage(event?: FormEvent) {
     event?.preventDefault();
     const text = draft.trim();
-    await sendMessage(text);
+    await sendMessage(text, "message", segment);
   }
 
   function handleComposerKeyDown(event: KeyboardEvent<HTMLTextAreaElement>) {
@@ -225,7 +243,7 @@ export function ChatExperience() {
                 type="button"
                 onClick={() => {
                   setSegment("agro");
-                  void sendMessage(copy.agro, "web_selection");
+                  void sendMessage(copy.agro, "web_selection", "agro");
                 }}
                 disabled={typing}
               >
@@ -235,7 +253,7 @@ export function ChatExperience() {
                 type="button"
                 onClick={() => {
                   setSegment("comercial");
-                  void sendMessage(copy.urban, "web_selection");
+                  void sendMessage(copy.urban, "web_selection", "comercial");
                 }}
                 disabled={typing}
               >
@@ -258,6 +276,11 @@ export function ChatExperience() {
               <strong>{copy.handoffTitle}</strong>
               <p>{copy.handoffBody}</p>
               <a className="commercial-action" href={handoff.url} target="_blank" rel="noreferrer" aria-label={copy.commercialButton} onClick={() => {
+                trackMetaPixelEvent("Lead", {
+                  content_name: "Chatbot WhatsApp sales handoff",
+                  destination: "whatsapp",
+                  ...(segment ? { segment: segment === "agro" ? "agro" : "urban" } : {}),
+                });
                 void fetch("/api/attribution", {
                   method: "POST", headers: { "content-type": "application/json" },
                   body: JSON.stringify({ eventName: "commercial_click", attribution: attribution.current }), keepalive: true,
@@ -278,6 +301,12 @@ export function ChatExperience() {
                   target="_blank"
                   rel="noreferrer"
                   aria-label={copy.meetingButton}
+                  onClick={() => {
+                    trackMetaPixelEvent("Schedule", {
+                      content_name: "Chatbot meeting scheduling",
+                      ...(segment ? { segment: segment === "agro" ? "agro" : "urban" } : {}),
+                    });
+                  }}
                 >
                   <span className="whatsapp-action-copy">
                     <span className="whatsapp-mark meeting-mark" aria-hidden="true">📅</span>

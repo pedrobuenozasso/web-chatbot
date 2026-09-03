@@ -5,15 +5,19 @@ import test from "node:test";
 const root = new URL("../", import.meta.url);
 
 test("define a experiência de atendimento Zasso", async () => {
-  const [page, layout, component, translations] = await Promise.all([
+  const [page, layout, component, translations, pixel] = await Promise.all([
     readFile(new URL("app/page.tsx", root), "utf8"),
     readFile(new URL("app/layout.tsx", root), "utf8"),
     readFile(new URL("app/components/ChatExperience.tsx", root), "utf8"),
     readFile(new URL("app/lib/ui-i18n.ts", root), "utf8"),
+    readFile(new URL("app/components/MetaPixel.tsx", root), "utf8"),
   ]);
 
   assert.match(page, /ChatExperience/);
   assert.match(layout, /Atendimento Zasso/);
+  assert.match(layout, /MetaPixel/);
+  assert.match(pixel, /1361275138339763/);
+  assert.match(pixel, /fbq\('track', 'PageView'\)/);
   assert.match(component, /UI_COPY/);
   assert.match(component, /https:\/\/zasso\.com\/politica-de-privacidade\//);
   assert.match(translations, /Política de Privacidade/);
@@ -25,6 +29,10 @@ test("define a experiência de atendimento Zasso", async () => {
   assert.match(translations, /Écrivez votre message/);
   assert.match(translations, /Escriba su mensaje/);
   assert.doesNotMatch(page + layout, /codex-preview|Your site is taking shape/);
+  assert.match(component, /Chatbot conversation started/);
+  assert.match(component, /Chatbot WhatsApp sales handoff/);
+  assert.match(component, /Chatbot meeting scheduling/);
+  assert.doesNotMatch(component, /(?:phone|email|summary|text):\s*(?:handoff|draft|message)/i);
 });
 
 test("mantém segredos fora do bundle cliente", async () => {

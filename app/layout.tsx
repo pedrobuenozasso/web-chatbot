@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "../tokens.css";
 import "./globals.css";
 import "./chat-glass.css";
+import { MetaPixel } from "./components/MetaPixel";
 
 export const metadata: Metadata = {
   title: "Atendimento Zasso",
@@ -16,7 +17,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR">
-      <body>{children}</body>
+      <body>
+        <MetaPixel />
+        {children}
+      </body>
     </html>
   );
 }
