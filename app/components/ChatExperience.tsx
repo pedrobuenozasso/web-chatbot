@@ -275,11 +275,10 @@ export function ChatExperience() {
               <span className="handoff-kicker"><i /> {copy.handoffKicker}</span>
               <strong>{copy.handoffTitle}</strong>
               <p>{copy.handoffBody}</p>
-              <a className="commercial-action" href={handoff.url} target="_blank" rel="noreferrer" aria-label={copy.commercialButton} onClick={() => {
+              <a className="commercial-action" href={handoff.url} target="_blank" rel="noreferrer" aria-label={copy.commercialButton} onClickCapture={() => {
                 trackMetaPixelEvent("Lead", {
                   content_name: "Chatbot WhatsApp sales handoff",
                   destination: "whatsapp",
-                  ...(segment ? { segment: segment === "agro" ? "agro" : "urban" } : {}),
                 });
                 void fetch("/api/attribution", {
                   method: "POST", headers: { "content-type": "application/json" },

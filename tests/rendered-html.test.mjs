@@ -31,6 +31,7 @@ test("define a experiência de atendimento Zasso", async () => {
   assert.doesNotMatch(page + layout, /codex-preview|Your site is taking shape/);
   assert.match(component, /Chatbot conversation started/);
   assert.match(component, /Chatbot WhatsApp sales handoff/);
+  assert.match(component, /onClickCapture/);
   assert.match(component, /Chatbot meeting scheduling/);
   assert.match(component, /eventName: "commercial_click"/);
   assert.match(component, /eventName: "meeting_click"/);
