@@ -31,9 +31,10 @@ test("define a experiência de atendimento Zasso", async () => {
   assert.doesNotMatch(page + layout, /codex-preview|Your site is taking shape/);
   assert.match(component, /Chatbot conversation started/);
   assert.match(component, /Chatbot WhatsApp sales handoff/);
-  assert.match(component, /onClickCapture/);
+  assert.match(component, /onClick=\{handleCommercialClick\}/);
   assert.match(component, /Chatbot meeting scheduling/);
   assert.match(component, /eventName: "commercial_click"/);
+  assert.match(component, /\/api\/attribution\/whatsapp/);
   assert.match(component, /eventName: "meeting_click"/);
   assert.doesNotMatch(component, /(?:phone|email|summary|text):\s*(?:handoff|draft|message)/i);
 });
@@ -59,6 +60,12 @@ test("usa integração privada no servidor", async () => {
   assert.match(route, /attribution:\s*body\.attribution/);
   assert.match(attributionRoute, /\/v1\/attribution/);
   assert.match(attributionRoute, /meeting_click/);
+  const whatsappRoute = await readFile(
+    new URL("app/api/attribution/whatsapp/route.ts", root),
+    "utf8",
+  );
+  assert.match(whatsappRoute, /requestCommercialHandoff:\s*true/);
+  assert.match(whatsappRoute, /conversation_not_found/);
   assert.match(attributionRoute, /httpOnly:\s*true/);
   assert.match(attribution, /utm_campaign/);
   assert.match(attribution, /campaign_id/);

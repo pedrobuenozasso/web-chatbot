@@ -43,6 +43,11 @@ Em **Campanhas Meta → Funil até o comercial**, o painel mostra por campanha/o
 
 Os dois cliques são registrados antes de abrir WhatsApp ou Calendly e continuam associados à mesma origem de campanha, sem enviar dados pessoais ou conteúdo da conversa ao painel.
 
+No clique normal do WhatsApp, o chatbot também inclui um identificador técnico
+opaco no texto pré-preenchido. Consulte
+[`WHATSAPP_REFERENCE_ATTRIBUTION.md`](./WHATSAPP_REFERENCE_ATTRIBUTION.md) para
+o contrato entre chatbot e CRM/Odoo.
+
 Os dados começam a existir a partir da publicação desta versão e do primeiro acesso por uma URL rastreada.
 
 ## Arquivos de produção relacionados
@@ -51,3 +56,4 @@ Os dados começam a existir a partir da publicação desta versão e do primeiro
 - `app/api/attribution/route.ts`: cria/recupera a sessão anônima e encaminha eventos ao backend privado.
 - `app/api/chat/route.ts`: transmite a atribuição da sessão com cada mensagem.
 - `app/components/ChatExperience.tsx`: registra abertura, clique no encaminhamento comercial e clique de reunião.
+- `app/api/attribution/whatsapp/route.ts`: solicita o código técnico no clique e mantém o link original como contingência.

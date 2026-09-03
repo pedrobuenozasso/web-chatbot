@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, KeyboardEvent, useEffect, useRef, useState } from "react";
+import { FormEvent, KeyboardEvent, MouseEvent, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { normalizeUiLanguage, UI_COPY, type UiLanguage } from "../lib/ui-i18n";
 import { campaignAttributionFromBrowser, type CampaignAttribution } from "../lib/campaign-attribution";
@@ -192,6 +192,43 @@ export function ChatExperience() {
     }
   }
 
+  function handleCommercialClick(event: MouseEvent<HTMLAnchorElement>) {
+    trackMetaPixelEvent("Lead", {
+      content_name: "Chatbot WhatsApp sales handoff",
+      destination: "whatsapp",
+    });
+
+    // Preserve the browser's native link behavior for modified clicks and as
+    // the no-popup fallback. Those paths still open the original handoff URL.
+    if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || !handoff?.url) {
+      void fetch("/api/attribution", {
+        method: "POST", headers: { "content-type": "application/json" },
+        body: JSON.stringify({ eventName: "commercial_click", attribution: attribution.current }), keepalive: true,
+      });
+      return;
+    }
+
+    const whatsappWindow = window.open("about:blank", "_blank");
+    if (!whatsappWindow) {
+      void fetch("/api/attribution", {
+        method: "POST", headers: { "content-type": "application/json" },
+        body: JSON.stringify({ eventName: "commercial_click", attribution: attribution.current }), keepalive: true,
+      });
+      return;
+    }
+
+    event.preventDefault();
+    whatsappWindow.opener = null;
+    const fallbackUrl = handoff.url;
+    void fetch("/api/attribution/whatsapp", { method: "POST", cache: "no-store" })
+      .then(async (response) => {
+        const payload = (await response.json().catch(() => ({}))) as { url?: unknown };
+        return response.ok && typeof payload.url === "string" ? payload.url : fallbackUrl;
+      })
+      .catch(() => fallbackUrl)
+      .then((url) => whatsappWindow.location.replace(url));
+  }
+
   return (
     <main className="site-shell">
       <div className="ambient ambient-one" aria-hidden="true" />
@@ -275,16 +312,7 @@ export function ChatExperience() {
               <span className="handoff-kicker"><i /> {copy.handoffKicker}</span>
               <strong>{copy.handoffTitle}</strong>
               <p>{copy.handoffBody}</p>
-              <a className="commercial-action" href={handoff.url} target="_blank" rel="noreferrer" aria-label={copy.commercialButton} onClickCapture={() => {
-                trackMetaPixelEvent("Lead", {
-                  content_name: "Chatbot WhatsApp sales handoff",
-                  destination: "whatsapp",
-                });
-                void fetch("/api/attribution", {
-                  method: "POST", headers: { "content-type": "application/json" },
-                  body: JSON.stringify({ eventName: "commercial_click", attribution: attribution.current }), keepalive: true,
-                });
-              }}>
+              <a className="commercial-action" href={handoff.url} target="_blank" rel="noreferrer" aria-label={copy.commercialButton} onClick={handleCommercialClick}>
                 <span className="whatsapp-action-copy">
                   <span className="whatsapp-mark" aria-hidden="true">
                     <Image src="/zasso-logo.png" alt="" width={38} height={38} />
