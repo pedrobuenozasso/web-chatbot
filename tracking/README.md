@@ -5,7 +5,7 @@ Esta pasta concentra o contrato de rastreamento entre anúncios Meta, landing pa
 ## Jornada medida
 
 ```text
-Meta Ads → landing page → chatbot aberto → chat iniciado → lead qualificado → encaminhamento → clique comercial
+Meta Ads → landing page → chatbot aberto → chat iniciado → lead qualificado → encaminhamento → clique no WhatsApp ou na reunião
 ```
 
 O chatbot grava a primeira origem conhecida de cada sessão. Isso impede que uma navegação posterior substitua a atribuição original do lead.
@@ -38,7 +38,10 @@ Em **Campanhas Meta → Funil até o comercial**, o painel mostra por campanha/o
 2. chat iniciado;
 3. lead qualificado;
 4. encaminhamento ao comercial;
-5. clique no botão comercial.
+5. clique no botão do WhatsApp comercial;
+6. clique no botão para agendar reunião.
+
+Os dois cliques são registrados antes de abrir WhatsApp ou Calendly e continuam associados à mesma origem de campanha, sem enviar dados pessoais ou conteúdo da conversa ao painel.
 
 Os dados começam a existir a partir da publicação desta versão e do primeiro acesso por uma URL rastreada.
 
@@ -47,5 +50,4 @@ Os dados começam a existir a partir da publicação desta versão e do primeiro
 - `app/lib/campaign-attribution.ts`: lê os parâmetros permitidos no navegador.
 - `app/api/attribution/route.ts`: cria/recupera a sessão anônima e encaminha eventos ao backend privado.
 - `app/api/chat/route.ts`: transmite a atribuição da sessão com cada mensagem.
-- `app/components/ChatExperience.tsx`: registra abertura e clique no encaminhamento comercial.
-
+- `app/components/ChatExperience.tsx`: registra abertura, clique no encaminhamento comercial e clique de reunião.

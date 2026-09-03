@@ -306,6 +306,10 @@ export function ChatExperience() {
                       content_name: "Chatbot meeting scheduling",
                       ...(segment ? { segment: segment === "agro" ? "agro" : "urban" } : {}),
                     });
+                    void fetch("/api/attribution", {
+                      method: "POST", headers: { "content-type": "application/json" },
+                      body: JSON.stringify({ eventName: "meeting_click", attribution: attribution.current }), keepalive: true,
+                    });
                   }}
                 >
                   <span className="whatsapp-action-copy">

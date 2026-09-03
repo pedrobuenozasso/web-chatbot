@@ -32,6 +32,8 @@ test("define a experiência de atendimento Zasso", async () => {
   assert.match(component, /Chatbot conversation started/);
   assert.match(component, /Chatbot WhatsApp sales handoff/);
   assert.match(component, /Chatbot meeting scheduling/);
+  assert.match(component, /eventName: "commercial_click"/);
+  assert.match(component, /eventName: "meeting_click"/);
   assert.doesNotMatch(component, /(?:phone|email|summary|text):\s*(?:handoff|draft|message)/i);
 });
 
@@ -55,6 +57,7 @@ test("usa integração privada no servidor", async () => {
   assert.match(route, /channel:\s*"web"/);
   assert.match(route, /attribution:\s*body\.attribution/);
   assert.match(attributionRoute, /\/v1\/attribution/);
+  assert.match(attributionRoute, /meeting_click/);
   assert.match(attributionRoute, /httpOnly:\s*true/);
   assert.match(attribution, /utm_campaign/);
   assert.match(attribution, /campaign_id/);

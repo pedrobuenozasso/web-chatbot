@@ -3,7 +3,7 @@ import { cookies } from "next/headers";
 export const runtime = "nodejs";
 
 const sessionCookie = "zasso_chat_session";
-const allowedEvents = new Set(["chatbot_opened", "commercial_click"]);
+const allowedEvents = new Set(["chatbot_opened", "commercial_click", "meeting_click"]);
 
 function response(body: object, status = 202) {
   return Response.json(body, {
