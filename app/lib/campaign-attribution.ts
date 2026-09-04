@@ -12,8 +12,29 @@ export type CampaignAttribution = {
   referrerHost?: string;
 };
 
+// Alguns navegadores internos da Meta preservam uma camada extra de URL
+// encoding no valor já lido pelo URLSearchParams (ex.: %5BCB%5D+...).
+// Decodificamos no máximo duas camadas adicionais para recuperar UTMs sem
+// transformar uma entrada malformada em falha no chat.
+function decodeTrackingValue(value: string) {
+  let decoded = value.trim();
+  for (let attempt = 0; attempt < 2; attempt += 1) {
+    const candidate = decoded.replaceAll("+", " ");
+    if (!/[+]|%[0-9a-f]{2}/i.test(candidate)) break;
+    try {
+      const next = decodeURIComponent(candidate);
+      if (next === decoded) break;
+      decoded = next;
+    } catch {
+      break;
+    }
+  }
+  return decoded.trim();
+}
+
 function readParam(parameters: URLSearchParams, name: string) {
-  const value = parameters.get(name)?.trim();
+  const rawValue = parameters.get(name);
+  const value = rawValue ? decodeTrackingValue(rawValue) : "";
   return value || undefined;
 }
 
