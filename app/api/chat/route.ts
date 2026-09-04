@@ -35,6 +35,36 @@ function clean(value: unknown, maximumLength: number) {
     .slice(0, maximumLength);
 }
 
+// Uma versão anterior do serviço de conversa ainda pode devolver chaves como
+// `nameQuestion` e `ackName`. Elas nunca são conteúdo para o visitante; esta
+// camada evita que detalhes internos vazem enquanto o fluxo continua
+// normalmente no backend.
+function presentableMessage(value: unknown, language: string) {
+  const text = clean(value, 4_000);
+  const nameQuestionByLanguage: Record<string, string> = {
+    "pt-BR": "Qual é o seu nome?",
+    "pt-PT": "Qual é o seu nome?",
+    en: "What is your name?",
+    de: "Wie heißen Sie?",
+    fr: "Comment vous appelez-vous ?",
+    es: "¿Cuál es su nombre?",
+  };
+  const normalizedLanguage = normalizeLanguage(language);
+  const nameQuestion = nameQuestionByLanguage[normalizedLanguage] || nameQuestionByLanguage["pt-BR"];
+  const acknowledgementByLanguage: Record<string, string> = {
+    "pt-BR": "Obrigado.",
+    "pt-PT": "Obrigado.",
+    en: "Thank you.",
+    de: "Vielen Dank.",
+    fr: "Merci.",
+    es: "Gracias.",
+  };
+  const acknowledgement = acknowledgementByLanguage[normalizedLanguage] || acknowledgementByLanguage["pt-BR"];
+  return text
+    .replace(/\bnameQuestion\b/gu, nameQuestion)
+    .replace(/\backName\b/gu, acknowledgement);
+}
+
 function normalizeLanguage(value: unknown) {
   const language = clean(value, 16);
   if (supportedLanguages.has(language)) return language;
@@ -199,13 +229,14 @@ export async function POST(request: Request) {
       return response({ error: "chatbot_unavailable" }, upstream.status >= 500 ? 502 : upstream.status);
     }
 
+    const responseLanguage = normalizeLanguage(payload.language);
     const rawMessages = Array.isArray(payload.messages)
-      ? payload.messages.map((message) => clean(message, 4_000)).filter(Boolean)
+      ? payload.messages.map((message) => presentableMessage(message, responseLanguage)).filter(Boolean)
       : [];
     const { messages, handoff } = extractHandoff(rawMessages);
     return response({
       messages,
-      language: clean(payload.language, 16) || language,
+      language: responseLanguage || language,
       stage: clean(payload.stage, 40),
       qualified: Boolean(payload.qualified),
       handoff,
