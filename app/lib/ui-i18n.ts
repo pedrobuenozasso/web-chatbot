@@ -1,4 +1,4 @@
-export type UiLanguage = "pt-BR" | "pt-PT" | "en" | "de" | "fr" | "es";
+export type UiLanguage = "pt-BR" | "pt-PT" | "en" | "de" | "fr" | "es" | "it";
 
 type UiCopy = {
   welcome: string;
@@ -36,9 +36,9 @@ type UiCopy = {
 
 export const UI_COPY: Record<UiLanguage, UiCopy> = {
   "pt-BR": {
-    welcome: "Olá! Agradecemos seu contato com a Zasso. 🌱⚡\n\nSomos pioneiros em Capina Elétrica, uma tecnologia que controla plantas daninhas por meio de energia elétrica, sem o uso de herbicidas.\n\nPara direcionarmos você a um atendimento mais adequado, sobre qual segmento deseja receber informações?",
+    welcome: "Olá! Agradecemos seu contato. 👋⚡\nSobre qual segmento você quer informações sobre Capina Elétrica?",
     introEyebrow: "Atendimento inteligente", introTitle: "Informação certa para a sua operação.", introBody: "Converse com a Zasso, tire dúvidas e conte um pouco sobre a sua necessidade. Ao final, seu contexto segue organizado para o time comercial.", approvedContent: "Conteúdo aprovado pela Zasso", brandSubtitle: "Tecnologia elétrica para o manejo de plantas",
-    supportName: "Atendimento Zasso", available: "disponível agora", restart: "Reiniciar", privacy: "Atendimento seguro. Evite enviar dados pessoais sensíveis.", today: "Hoje", now: "agora", segmentLabel: "Escolha seu segmento", agro: "Agro", urban: "Área urbana", typing: "Atendimento está digitando",
+    supportName: "Atendimento Zasso", available: "online", restart: "Reiniciar", privacy: "Atendimento seguro. Evite enviar dados pessoais sensíveis.", today: "Hoje", now: "agora", segmentLabel: "Escolha seu segmento", agro: "Agro", urban: "Área urbana", typing: "Atendimento está digitando",
     handoffKicker: "Triagem concluída", handoffTitle: "Seu atendimento pode continuar com uma pessoa do nosso time.", handoffBody: "Seu resumo já está preparado para você não precisar repetir tudo.", handoffConsent: "Ao clicar, você concorda em receber contato da Zasso Brasil pelo WhatsApp, inclusive uma retomada do atendimento no próximo dia útil, e declara que leu e aceita nossa", commercialButton: "Falar com o time comercial", openWhatsApp: "Abrir no WhatsApp", meetingButton: "Marcar uma reunião", openMeeting: "Agendar horário", protocol: "Protocolo", error: "Não consegui concluir essa resposta agora. Aguarde um instante e tente novamente.", placeholder: "Digite sua mensagem...", messageLabel: "Mensagem", send: "Enviar mensagem", consent: "Ao continuar, você concorda com o uso dos dados para este atendimento.", privacyPolicy: "Política de Privacidade",
   },
   "pt-PT": {
@@ -71,14 +71,70 @@ export const UI_COPY: Record<UiLanguage, UiCopy> = {
     supportName: "Atención Zasso", available: "disponible ahora", restart: "Reiniciar", privacy: "Atención segura. Evite enviar datos personales sensibles.", today: "Hoy", now: "ahora", segmentLabel: "Elija su segmento", agro: "Agricultura", urban: "Área urbana", typing: "Zasso está escribiendo",
     handoffKicker: "Clasificación completada", handoffTitle: "Ahora puede continuar con una persona de nuestro equipo.", handoffBody: "Su resumen ya está preparado para que no tenga que repetirlo todo.", handoffConsent: "Al hacer clic, acepta que Zasso Brasil se comunique con usted por WhatsApp, incluida una reanudación de la atención el próximo día hábil, y declara que ha leído y acepta nuestra", commercialButton: "Hablar con el equipo comercial", openWhatsApp: "Abrir WhatsApp", meetingButton: "Agendar una reunión", openMeeting: "Reservar un horario", protocol: "Referencia", error: "No pude completar esta respuesta. Espere un momento e inténtelo de nuevo.", placeholder: "Escriba su mensaje...", messageLabel: "Mensaje", send: "Enviar mensaje", consent: "Al continuar, acepta el uso de los datos para esta atención.", privacyPolicy: "Política de privacidad",
   },
+  it: {
+    welcome: "Ciao! Grazie per aver contattato Zasso. 👋⚡\nPer quale settore desidera ricevere informazioni sul diserbo elettrico?",
+    introEyebrow: "Assistenza intelligente", introTitle: "Le informazioni giuste per la tua attività.", introBody: "Parla con Zasso, chiarisci i tuoi dubbi e raccontaci brevemente le tue esigenze. Alla fine, il contesto sarà organizzato per il nostro team commerciale.", approvedContent: "Contenuti approvati da Zasso", brandSubtitle: "Tecnologia elettrica per la gestione della vegetazione",
+    supportName: "Assistenza Zasso", available: "online", restart: "Ricomincia", privacy: "Assistenza sicura. Evita di inviare dati personali sensibili.", today: "Oggi", now: "ora", segmentLabel: "Scegli il tuo settore", agro: "Agricoltura", urban: "Area urbana", typing: "Zasso sta scrivendo",
+    handoffKicker: "Qualificazione completata", handoffTitle: "Ora puoi continuare con una persona del nostro team.", handoffBody: "Il tuo riepilogo è pronto, quindi non dovrai ripetere tutto.", handoffConsent: "Facendo clic, accetti di essere contattato da Zasso Brasil su WhatsApp, incluso un eventuale seguito il prossimo giorno lavorativo, e dichiari di aver letto e accettato la nostra", commercialButton: "Parla con il team commerciale", openWhatsApp: "Apri WhatsApp", meetingButton: "Prenota un incontro", openMeeting: "Prenota un orario", protocol: "Riferimento", error: "Non riesco a completare questa risposta ora. Attendi un momento e riprova.", placeholder: "Scrivi il tuo messaggio...", messageLabel: "Messaggio", send: "Invia messaggio", consent: "Continuando, accetti l’uso dei tuoi dati per questa assistenza.", privacyPolicy: "Informativa sulla privacy",
+  },
 };
 
-export function normalizeUiLanguage(value?: string | null): UiLanguage {
+export function resolveUiLanguage(value?: string | null): UiLanguage | null {
   const language = String(value || "").toLocaleLowerCase();
   if (language.startsWith("pt-pt")) return "pt-PT";
   if (language.startsWith("en")) return "en";
   if (language.startsWith("de")) return "de";
   if (language.startsWith("fr")) return "fr";
   if (language.startsWith("es")) return "es";
-  return "pt-BR";
+  if (language.startsWith("it")) return "it";
+  if (language.startsWith("pt")) return "pt-BR";
+  return null;
+}
+
+export function normalizeUiLanguage(value?: string | null): UiLanguage {
+  return resolveUiLanguage(value) || "pt-BR";
+}
+
+export function hasUiLanguage(value?: string | null): boolean {
+  return resolveUiLanguage(value) !== null;
+}
+
+const COUNTRY_LANGUAGE_FALLBACK: Record<string, UiLanguage> = {
+  AT: "de",
+  BR: "pt-BR",
+  CH: "de",
+  DE: "de",
+  ES: "es",
+  FR: "fr",
+  GB: "en",
+  IT: "it",
+  PT: "pt-PT",
+  US: "en",
+};
+
+type BrowserLanguageInput = {
+  forcedLanguage?: string | null;
+  languages?: readonly string[];
+  country?: string | null;
+};
+
+/**
+ * A campaign can force a language with ?lang=it. Otherwise, trust the
+ * visitor's browser language first; country is only a fallback because it
+ * does not necessarily represent the language a person speaks.
+ */
+export function detectUiLanguage({
+  forcedLanguage,
+  languages = [],
+  country,
+}: BrowserLanguageInput): UiLanguage {
+  const forced = resolveUiLanguage(forcedLanguage);
+  if (forced) return forced;
+
+  for (const language of languages) {
+    const detected = resolveUiLanguage(language);
+    if (detected) return detected;
+  }
+
+  return COUNTRY_LANGUAGE_FALLBACK[String(country || "").toUpperCase()] || "pt-BR";
 }

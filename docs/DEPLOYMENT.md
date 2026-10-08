@@ -11,7 +11,7 @@
 ## Variáveis
 
 ```text
-CHATBOT_API_URL=https://endpoint-seguro-da-zasso
+CHATBOT_API_URL=https://zasso-chatbot.srv1522435.hstgr.cloud
 CHATBOT_API_TOKEN=<segredo-longo-compartilhado-com-o-backend>
 
 # Opcionais: botão "Marcar reunião" ao final da triagem.
@@ -25,6 +25,10 @@ ou ser enviado ao navegador.
 Os links de agenda são públicos (o link do calendário em si), por isso podem
 usar `NEXT_PUBLIC_`. Sem eles configurados, o app funciona normalmente e só
 não exibe o botão de reunião.
+
+O hostname técnico é protegido pelo Bearer Token e encaminhado pelo Traefik
+somente ao serviço do chatbot. Banco, worker de IA e demais containers não são
+expostos pela aplicação web.
 
 ## Publicação segura
 

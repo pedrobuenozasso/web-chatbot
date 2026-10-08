@@ -4,7 +4,7 @@ export const runtime = "nodejs";
 
 const sessionCookie = "zasso_chat_session";
 const maximumMessageLength = 800;
-const supportedLanguages = new Set(["pt-BR", "pt-PT", "en", "de", "fr", "es"]);
+const supportedLanguages = new Set(["pt-BR", "pt-PT", "en", "de", "fr", "es", "it"]);
 
 type ChatbotResponse = {
   messages?: unknown;
@@ -80,6 +80,7 @@ function detectedLanguage(text: string, fallback: string) {
     de: ["hallo", "was", "wie", "preis", "unkraut", "landwirtschaft", "danke"],
     fr: ["bonjour", "salut", "comment", "prix", "desherbage", "agriculture", "merci"],
     es: ["hola", "como", "precio", "deshierbe", "agricultura", "gracias", "donde"],
+    it: ["ciao", "salve", "come", "prezzo", "diserbo", "agricoltura", "grazie", "tecnica"],
   };
   const ranked = Object.entries(signals)
     .map(([language, entries]) => ({ language, score: entries.filter((entry) => words.has(entry)).length }))
@@ -150,6 +151,11 @@ function demoAnswer(text: string, language: string) {
       price: ["La inversión varía según la aplicación, el tamaño de la operación y la configuración necesaria. Necesito comprender mejor su necesidad.", "¿Trabaja en agricultura, en un área urbana o en otro segmento?"],
       technology: ["La tecnología Zasso utiliza electricidad controlada para actuar sobre las plantas no deseadas, sin herbicidas químicos.", "¿Trabaja en agricultura, en un área urbana o en otro segmento?"],
       generic: ["Esta es una vista previa segura de la atención web.", "¿Trabaja en agricultura, en un área urbana o en otro segmento?"],
+    },
+    it: {
+      price: ["L’investimento varia in base all’applicazione, alle dimensioni dell’operazione e alla configurazione richiesta. Devo comprendere le sue esigenze per orientarla correttamente.", "Opera principalmente in agricoltura, in un’area urbana o in un altro settore?"],
+      technology: ["La tecnologia Zasso utilizza elettricità controllata per agire sulle piante indesiderate, senza erbicidi chimici.", "Per orientarla correttamente, opera in agricoltura, in un’area urbana o in un altro settore?"],
+      generic: ["Questa è un’anteprima sicura dell’assistenza web.", "Per iniziare, opera in agricoltura, in un’area urbana o in un altro settore?"],
     },
   };
   return (answers[language] || answers[language === "pt-PT" ? "pt-BR" : "pt-BR"])[topic];

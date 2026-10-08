@@ -8,6 +8,11 @@ export const metadata: Metadata = {
   title: "Atendimento Zasso",
   description:
     "Atendimento virtual da Zasso para dúvidas e qualificação comercial.",
+  icons: {
+    icon: [{ url: "/zasso-logo.png?v=20260915", type: "image/png" }],
+    shortcut: "/zasso-logo.png?v=20260915",
+    apple: "/zasso-logo.png?v=20260915",
+  },
 };
 
 export default function RootLayout({

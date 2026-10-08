@@ -24,7 +24,20 @@ function isWhatsAppHandoffUrl(value: unknown): value is string {
 // runs only after the user clicks the commercial CTA and returns the WhatsApp
 // URL with the opaque [ref:XXXXXXXX] marker already attached by the private
 // chatbot service. The browser never sends its message summary to this route.
-export async function POST() {
+export async function POST(request: Request) {
+  // Reenviamos a atribuição capturada no browser neste exato clique. Assim o
+  // handoff continua atribuível mesmo se o evento de abertura tiver sido
+  // interrompido pelo navegador interno da Meta.
+  let attribution: unknown;
+  if (request.headers.get("content-type")?.toLowerCase().startsWith("application/json")) {
+    try {
+      const body = (await request.json()) as { attribution?: unknown };
+      attribution = body.attribution;
+    } catch {
+      // O handoff ainda pode usar a atribuição previamente persistida.
+    }
+  }
+
   const cookieStore = await cookies();
   const conversationId = cookieStore.get(sessionCookie)?.value;
   if (!conversationId || !/^[a-f0-9-]{36}$/i.test(conversationId)) {
@@ -42,6 +55,7 @@ export async function POST() {
       body: JSON.stringify({
         conversationId: `web:${conversationId}`,
         eventName: "commercial_click",
+        attribution,
         requestCommercialHandoff: true,
       }),
       signal: AbortSignal.timeout(10_000),

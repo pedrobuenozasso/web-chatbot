@@ -12,11 +12,13 @@
 
 # testing
 /coverage
+/.playwright-cli/
 
 # next.js
 /.next/
 /.vinext/
 /out/
+/tsconfig.tsbuildinfo
 
 # misc
 .DS_Store
