@@ -5,6 +5,7 @@ import Image from "next/image";
 import { detectUiLanguage, hasUiLanguage, normalizeUiLanguage, UI_COPY, type UiLanguage } from "../lib/ui-i18n";
 import { campaignAttributionFromBrowser, type CampaignAttribution } from "../lib/campaign-attribution";
 import { trackMetaPixelEvent } from "../lib/meta-pixel";
+import { createWhatsAppClickTracker } from "../lib/google-analytics";
 
 type ChatMessage = {
   id: string;
@@ -116,6 +117,7 @@ export function ChatExperience() {
   const meetingUrl = withMeetingSummary(segment ? MEETING_URL_BY_SEGMENT[segment] : undefined, handoff?.summary);
   const attribution = useRef<CampaignAttribution | undefined>(undefined);
   const conversationStarted = useRef(false);
+  const googleWhatsAppTracker = useRef<ReturnType<typeof createWhatsAppClickTracker> | null>(null);
 
   useEffect(() => {
     document.documentElement.lang = language;
@@ -254,6 +256,13 @@ export function ChatExperience() {
   }
 
   function handleCommercialClick(event: MouseEvent<HTMLAnchorElement>) {
+    if (handoff?.url) {
+      googleWhatsAppTracker.current ??= createWhatsAppClickTracker();
+      googleWhatsAppTracker.current({
+        segment: segment === "agro" ? "agro" : segment === "comercial" ? "urban" : "unknown",
+        language,
+      });
+    }
     trackMetaPixelEvent("Lead", {
       content_name: "Chatbot WhatsApp sales handoff",
       destination: "whatsapp",
