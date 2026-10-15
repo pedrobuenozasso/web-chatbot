@@ -3,6 +3,7 @@ import "../tokens.css";
 import "./globals.css";
 import "./chat-glass.css";
 import { MetaPixel } from "./components/MetaPixel";
+import { GoogleAnalytics } from "./components/GoogleAnalytics";
 
 export const metadata: Metadata = {
   title: "Atendimento Zasso",
@@ -24,6 +25,7 @@ export default function RootLayout({
     <html lang="pt-BR">
       <body>
         <MetaPixel />
+        <GoogleAnalytics />
         {children}
       </body>
     </html>
