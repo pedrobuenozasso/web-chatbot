@@ -1,0 +1,11 @@
+.env
+.vercel/
+.index/
+.logs/
+.state/
+.outbox/
+node_modules/
+secrets/
+__pycache__/
+*.pyc
+.vercel

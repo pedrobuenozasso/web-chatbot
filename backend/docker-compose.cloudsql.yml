@@ -1,0 +1,20 @@
+services:
+  zasso-chatbot:
+    environment:
+      DATABASE_ENABLED: "true"
+      DATABASE_REQUIRED: "${DATABASE_REQUIRED:-false}"
+      DATABASE_HOST: cloudsql-proxy-pool
+      DATABASE_PORT: 5432
+      DATABASE_NAME: "${CLOUDSQL_DB_NAME}"
+      DATABASE_USER: "${CLOUDSQL_DB_USER}"
+      DATABASE_PASSWORD: "${CLOUDSQL_DB_PASSWORD}"
+      DATABASE_SCHEMA: "${CLOUDSQL_DB_SCHEMA:-public}"
+      DATABASE_SSL_MODE: disable
+    networks:
+      - n8n
+      - sacf
+
+networks:
+  sacf:
+    external: true
+    name: sacf-net

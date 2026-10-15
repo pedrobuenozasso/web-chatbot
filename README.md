@@ -1,9 +1,16 @@
-# Zasso Web Chat
+# Zasso Chatbot
 
-Canal web de primeiro atendimento e qualificação comercial da Zasso, publicado
-como aplicação Next.js na Vercel. A interface
-reutiliza o chatbot existente como fonte única para RAG, idiomas, guardrails,
-estado da conversa e handoff comercial.
+Este repositório reúne o atendimento web e o serviço central que processa a
+conversa, qualifica o lead e prepara o handoff para o WhatsApp.
+
+| Área | Diretório | Publicação |
+| --- | --- | --- |
+| Interface web Next.js | raiz | Vercel (`atendimento.zasso.com`) |
+| Serviço central Node.js | [`backend/`](backend/README.md) | VPS Hostinger (`zasso-chatbot.srv1522435.hstgr.cloud`) |
+
+O frontend encaminha as mensagens ao serviço central. A lógica de RAG,
+qualificação, atribuição de campanha e geração do link do WhatsApp fica em
+`backend/src/`.
 
 Prévia: [web-chatbot-rouge.vercel.app](https://web-chatbot-rouge.vercel.app)
 
@@ -33,6 +40,17 @@ mensagem para o backend real sem expor credenciais ao navegador.
 npm run lint
 npm test
 ```
+
+Para validar o serviço central:
+
+```bash
+cd backend
+npm install
+npm test
+```
+
+O código em `backend/` não é publicado pela Vercel. Alterações nele exigem a
+rotina de deploy da VPS após revisão e teste.
 
 ## Documentação
 

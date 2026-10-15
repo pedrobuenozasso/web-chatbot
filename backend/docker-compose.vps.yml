@@ -1,0 +1,42 @@
+name: zasso-chatbot
+
+services:
+  zasso-chatbot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: zasso-chatbot
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      CHATBOT_API_HOST: 0.0.0.0
+      CHATBOT_API_PORT: 3000
+    expose:
+      - "3000"
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.zasso-chatbot.rule=Host(`zasso-chatbot.srv1522435.hstgr.cloud`)
+      - traefik.http.routers.zasso-chatbot.entrypoints=websecure
+      - traefik.http.routers.zasso-chatbot.tls.certresolver=letsencrypt
+      - traefik.http.services.zasso-chatbot.loadbalancer.server.port=3000
+    networks:
+      - n8n
+      - sacf
+    volumes:
+      - zasso_chatbot_state:/app/.state
+      - zasso_chatbot_outbox:/app/.outbox
+      - zasso_chatbot_logs:/app/.logs
+
+networks:
+  n8n:
+    external: true
+    name: n8n-upoc_default
+  sacf:
+    external: true
+    name: sacf-net
+
+volumes:
+  zasso_chatbot_state:
+  zasso_chatbot_outbox:
+  zasso_chatbot_logs:

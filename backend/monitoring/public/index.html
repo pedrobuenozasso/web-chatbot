@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex,nofollow,noarchive">
+    <meta name="theme-color" content="#050706">
+    <title>Zasso Intelligence · Monitoramento</title>
+    <link rel="icon" type="image/png" sizes="64x64" href="/assets/zasso-symbol-favicon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/zasso-symbol-touch-icon.png">
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/login.css">
+    <link rel="stylesheet" href="/conversation.css">
+    <link rel="stylesheet" href="/brand.css">
+    <link rel="stylesheet" href="/tokens.css">
+    <link rel="stylesheet" href="/campaigns.css">
+  </head>
+  <body>
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+    <main id="login-view" class="login-view">
+      <section class="login-panel" aria-labelledby="login-title">
+        <img class="login-logo" src="/assets/zasso-logo-black.png" alt="Zasso">
+        <p class="eyebrow">INTELLIGENCE · LEAD OPERATIONS</p>
+        <h1 id="login-title">Monitoramento do atendimento inteligente.</h1>
+        <p class="login-copy">Acompanhe conversas, qualidade e segurança em uma visão única da operação.</p>
+        <form id="login-form" class="login-form" data-step="request">
+          <label>E-mail corporativo<input name="email" type="email" autocomplete="username" required placeholder="nome@zasso.com.br"></label>
+          <div id="code-fields" class="hidden">
+            <label>Código recebido por e-mail<input name="code" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" maxlength="6" placeholder="000000"></label>
+            <p class="security-note code-note">O código vale por 10 minutos e funciona uma única vez.</p>
+          </div>
+          <button id="login-submit" class="primary-button" type="submit">Enviar código</button>
+          <div id="login-secondary-actions" class="login-actions hidden"><button id="resend-code" class="text-button" type="button">Enviar novo código</button><button id="change-email" class="text-button" type="button">Corrigir e-mail</button></div>
+          <p id="login-error" class="form-error" role="alert"></p>
+        </form>
+      </section>
+      <aside class="login-aside">
+        <img class="login-cover" src="/assets/zasso-e-coffee.png" alt="Equipamento E-COFFEE da Zasso em aplicação no cultivo">
+        <div class="login-cover-overlay"></div>
+        <div class="login-aside-copy">
+          <span class="login-aside-index">01 · OPERAÇÃO CONECTADA</span>
+          <strong>Tecnologia no campo.<br>Inteligência no atendimento.</strong>
+          <p>Da primeira mensagem à oportunidade qualificada.</p>
+        </div>
+        <div class="login-status-card">
+          <span class="status-dot online"></span>
+          <div><strong>Operação monitorada</strong><span>Saúde, conversas e conhecimento em um só lugar.</span></div>
+        </div>
+      </aside>
+    </main>
+
+    <main id="portal-view" class="portal-view hidden" aria-labelledby="portal-title">
+      <header class="portal-header">
+        <a class="portal-brand" href="#" aria-label="Zasso Intelligence">
+          <img src="/assets/zasso-logo-round-black.png" alt="">
+          <span><strong>Zasso Intelligence</strong><small>Operations Center</small></span>
+        </a>
+        <div class="portal-session"><span id="portal-user"></span><button id="portal-logout" class="portal-logout" type="button">Sair</button></div>
+      </header>
+      <section class="portal-intro">
+        <div>
+          <p>Central Zasso</p>
+          <h1 id="portal-title">O que você quer analisar hoje?</h1>
+        </div>
+        <span>Escolha uma área para começar. Cada operação tem sua própria navegação e você volta para esta Central quando quiser trocar.</span>
+      </section>
+      <section class="area-picker" aria-label="Áreas de monitoramento">
+        <article class="area-card area-card-whatsapp">
+          <div class="area-card-brand" aria-hidden="true">
+            <svg class="area-card-icon area-card-icon-whatsapp" viewBox="0 0 24 24" role="img"><path d="M20.5 11.7a8.4 8.4 0 0 1-12.4 7.4L3.5 20.5l1.4-4.4A8.4 8.4 0 1 1 20.5 11.7Z"/><path d="M7.6 7.2c.6-.6 1.2-.5 1.6.2l1.1 2.1c.2.4.1.9-.2 1.2l-.8.8a9.1 9.1 0 0 0 3.3 3.3l.8-.8c.3-.3.8-.4 1.2-.2l2.1 1.1c.7.4.8 1 .2 1.6l-.7.7c-.8.8-2 1.1-3.1.8a9.8 9.8 0 0 1-7-7c-.3-1.1 0-2.3.8-3.1l.7-.7Z"/></svg>
+          </div>
+          <div class="area-card-copy"><small>Leads e chatbot</small><strong>WhatsApp</strong><em>Acompanhe conversas, qualificação, revisões e segurança.</em></div>
+          <button class="area-card-action area-card-button" type="button" data-area="whatsapp">Analisar WhatsApp</button>
+        </article>
+        <article class="area-card area-card-meta">
+          <div class="area-card-brand area-card-brand-meta" aria-hidden="true">
+            <svg class="area-card-icon" viewBox="0 0 24 24" role="img"><path d="M14.3 8.2V6.7c0-.7.5-.9 1.1-.9h2.8V2.2L15.1 2c-3.1 0-5.2 1.9-5.2 5.4v.8H7v4.1h2.9V22h4.4v-9.7h3.5l.6-4.1h-4.1Z"/></svg>
+          </div>
+          <div class="area-card-copy"><small>Mídia e aquisição</small><strong>Campanhas Meta</strong><em>Compare investimento, alcance, cliques e conversas reportadas.</em></div>
+          <button class="area-card-action area-card-button" type="button" data-area="campaigns">Analisar campanhas</button>
+        </article>
+      </section>
+      <footer class="portal-foot"><span>Dados protegidos · acesso interno</span><span>Zasso Group · 2026</span></footer>
+    </main>
+
+    <div id="app-view" class="app-view hidden">
+      <aside class="sidebar">
+        <div class="sidebar-brand"><img class="sidebar-logo sidebar-logo-round" src="/assets/zasso-logo-round-black.png" alt="Zasso"><div><strong>Intelligence</strong><span id="sidebar-module-label">Lead Operations</span></div></div>
+        <nav id="main-nav" aria-label="Navegação principal">
+          <button data-portal class="nav-item nav-home"><span>←</span> Voltar à Central</button>
+          <div id="whatsapp-nav" class="nav-module">
+            <p class="nav-section-label">WhatsApp</p>
+            <button data-view="overview" class="nav-item active"><span>⌁</span> Visão geral</button>
+            <button data-view="conversations" class="nav-item"><span>◫</span> Conversas</button>
+            <button data-view="quality" class="nav-item"><span>♢</span> Revisões e FAQs</button>
+            <button data-view="security" class="nav-item"><span>⌾</span> Segurança</button>
+            <p class="nav-section-label admin-only">Administração</p>
+            <button data-view="users" class="nav-item admin-only"><span>◎</span> Acessos</button>
+          </div>
+          <div id="marketing-nav" class="nav-module hidden">
+            <p class="nav-section-label">Marketing</p>
+            <button data-marketing-view="overview" class="nav-item active"><span>⌁</span> Visão geral</button>
+            <button data-marketing-view="performance" class="nav-item"><span>↗</span> Desempenho</button>
+            <button data-marketing-view="list" class="nav-item"><span>◫</span> Campanhas</button>
+          </div>
+        </nav>
+        <div class="sidebar-footer">
+          <div id="sidebar-user" class="sidebar-user"></div>
+          <button id="logout-button" class="text-button">Sair</button>
+        </div>
+      </aside>
+
+      <section class="workspace">
+        <header class="topbar">
+          <div><p class="eyebrow" id="page-eyebrow">OPERAÇÃO EM TEMPO REAL</p><h1 id="page-title">Visão geral</h1></div>
+          <div class="topbar-actions"><span id="last-refresh" class="last-refresh"></span><button id="refresh-button" class="secondary-button">Atualizar</button></div>
+        </header>
+
+        <div id="loading" class="loading hidden"><span></span><p>Atualizando os dados…</p></div>
+
+        <section id="view-overview" class="view-section">
+          <section class="brand-hero">
+            <div class="brand-hero-copy"><p class="panel-kicker">ELECTRIC VEGETATION CONTROL</p><h2>Atendimento que transforma interesse em oportunidade.</h2><p>Visibilidade operacional para acompanhar cada lead, revisar a qualidade das respostas e evoluir a base de conhecimento com segurança.</p><div class="brand-hero-tags"><span>Triagem inteligente</span><span>RAG auditável</span><span>Operação multilíngue</span></div></div>
+            <div class="brand-hero-media"><img src="/assets/zasso-headquarters-machines.png" alt="Sede da Zasso com equipamentos de controle elétrico de vegetação"><span>Field-proven technology</span></div>
+          </section>
+          <div id="health-banner" class="health-banner"></div>
+          <section class="overview-metrics-toolbar" aria-label="Período dos indicadores">
+            <div><p class="panel-kicker">VISÃO OPERACIONAL</p><h2>Indicadores do atendimento</h2></div>
+            <div class="period-selector" role="group" aria-label="Escolha o período dos indicadores">
+              <button type="button" data-overview-period="24">24h</button>
+              <button type="button" data-overview-period="168">7 dias</button>
+              <button type="button" data-overview-period="336">14 dias</button>
+              <button type="button" data-overview-period="720">30 dias</button>
+            </div>
+          </section>
+          <div id="metric-grid" class="metric-grid"></div>
+          <div class="dashboard-grid">
+            <article class="panel wide"><div class="panel-heading"><div><p class="panel-kicker">DISTRIBUIÇÃO</p><h2>Leads por segmento</h2></div><span class="period-pill">30 dias</span></div><div id="segment-chart" class="bar-chart"></div></article>
+            <article class="panel"><div class="panel-heading"><div><p class="panel-kicker">IDIOMAS</p><h2>Conversas atendidas</h2></div></div><div id="language-list" class="rank-list"></div></article>
+            <article class="panel"><div class="panel-heading"><div><p class="panel-kicker">JORNADA</p><h2>Status das conversas</h2></div></div><div id="status-list" class="rank-list"></div></article>
+            <article class="panel wide"><div class="panel-heading"><div><p class="panel-kicker">ÚLTIMAS INTERAÇÕES</p><h2>Conversas recentes</h2></div><button class="text-button" data-open-view="conversations">Ver todas</button></div><div id="recent-conversations" class="table-wrap"></div></article>
+          </div>
+        </section>
+
+        <section id="view-conversations" class="view-section hidden">
+          <div class="filter-bar">
+            <label class="search-field"><span>⌕</span><input id="conversation-search" type="search" placeholder="Buscar protocolo, nome ou região"></label>
+            <select id="conversation-status" aria-label="Filtrar por status"><option value="">Todos os status</option><option value="active">Em atendimento</option><option value="qualified">Qualificada</option><option value="closed_by_lead">Encerrada pelo lead</option><option value="inactive_lost">Perdida por inatividade</option><option value="expired">Expirada</option></select>
+            <select id="conversation-segment" aria-label="Filtrar por segmento"><option value="">Todos os segmentos</option><option value="agro">Agro</option><option value="urban">Urbano</option></select>
+            <select id="conversation-market" aria-label="Filtrar por país ou idioma"><option value="">Todos os países</option><option value="br">🇧🇷 Brasil</option><option value="pt">🇵🇹 Portugal</option><option value="es">🇪🇸 Espanha</option></select>
+          </div>
+          <article class="panel"><div class="panel-heading"><div><p class="panel-kicker">HISTÓRICO PROTEGIDO</p><h2>Conversas</h2></div><span id="conversation-total" class="period-pill"></span></div><div id="conversation-table" class="table-wrap"></div><div id="conversation-pagination" class="pagination"></div></article>
+        </section>
+
+        <section id="view-quality" class="view-section hidden">
+          <div class="action-hero"><div><p class="panel-kicker">MELHORIA CONTROLADA</p><h2>Revisão humana seletiva</h2><p>Somente as conversas marcadas com o sino entram nesta fila. A análise remove dados de contato e nenhuma FAQ altera o RAG sem validação humana e fonte oficial.</p></div><div class="review-hero-actions reviewer-only"><button id="export-reviews-html" class="secondary-button">Exportar HTML</button><button id="export-reviews-json" class="secondary-button">Exportar JSON</button><button id="run-analysis" class="primary-button">Analisar marcadas</button></div></div>
+          <article class="panel"><div class="panel-heading"><div><p class="panel-kicker">FILA SELETIVA</p><h2>Conversas que precisam de revisão</h2></div><span id="review-queue-total" class="period-pill"></span></div><p class="review-retention-note">Marque o sino na lista de conversas. Exporte ou revise dentro de 15 dias, enquanto o histórico integral ainda está disponível.</p><div id="review-queue" class="table-wrap"></div></article>
+          <div class="dashboard-grid"><article class="panel"><div class="panel-heading"><div><p class="panel-kicker">EXECUÇÕES</p><h2>Análises das marcadas</h2></div></div><div id="analysis-runs" class="stack-list"></div></article><article class="panel wide"><div class="panel-heading"><div><p class="panel-kicker">CANDIDATAS</p><h2>Sugestões de FAQ</h2></div></div><div id="faq-candidates" class="candidate-list"></div></article></div>
+        </section>
+
+        <section id="view-security" class="view-section hidden">
+          <div id="security-metrics" class="metric-grid compact"></div>
+          <div class="dashboard-grid"><article class="panel"><div class="panel-heading"><div><p class="panel-kicker">GUARDRAILS</p><h2>Eventos dos últimos 7 dias</h2></div></div><div id="event-counts" class="rank-list"></div></article><article class="panel wide"><div class="panel-heading"><div><p class="panel-kicker">TRILHA DE AUDITORIA</p><h2>Acessos e alterações</h2></div></div><div id="audit-table" class="table-wrap"></div></article></div>
+        </section>
+
+        <section id="view-campaigns" class="view-section hidden">
+          <div class="campaign-toolbar">
+            <div class="campaign-context"><span class="meta-mark" aria-hidden="true">M</span><div><strong>Meta Ads</strong><span id="campaign-account">Conta de anúncios</span></div></div>
+            <div class="campaign-filters">
+              <label>Período<select id="campaign-days"><option value="7">7 dias</option><option value="14">14 dias</option><option value="30" selected>30 dias</option><option value="90">90 dias</option></select></label>
+              <label>Status<select id="campaign-status"><option value="">Todos</option><option value="ACTIVE">Ativas</option><option value="PAUSED">Pausadas</option><option value="WITH_ISSUES">Com problema</option></select></label>
+            </div>
+          </div>
+          <div id="campaign-setup" class="campaign-setup hidden"></div>
+          <div id="campaign-content">
+            <section id="campaign-screen-overview" class="campaign-screen" aria-label="Visão geral das campanhas">
+              <div id="campaign-overview-metrics" class="campaign-metrics campaign-metrics-primary" aria-live="polite"></div>
+              <div class="campaign-overview-grid">
+                <article class="campaign-panel campaign-trend campaign-panel-featured"><header><div><span class="campaign-panel-kicker">EVOLUÇÃO DIÁRIA</span><h2>Movimento do período</h2><p>Investimento diário e conversas reportadas.</p></div><span id="campaign-overview-period" class="campaign-period"></span></header><div id="campaign-overview-chart" class="campaign-chart campaign-chart-compact"></div></article>
+                <article class="campaign-panel campaign-distribution"><header><div><span class="campaign-panel-kicker">PARTICIPAÇÃO</span><h2>Distribuição do investimento</h2><p>Quanto cada campanha representa no total.</p></div></header><div id="campaign-spend-distribution" class="campaign-distribution-list"></div></article>
+                <article class="campaign-panel campaign-highlights"><header><div><h2>Destaques do período</h2><p>Leituras objetivas dos dados atuais.</p></div></header><div id="campaign-highlights" class="campaign-highlight-list"></div></article>
+              </div>
+              <article class="campaign-panel campaign-attribution-panel"><header><div><span class="campaign-panel-kicker">ATRIBUIÇÃO PRÓPRIA</span><h2>Funil até o comercial</h2><p>UTMs registrados na jornada entre o anúncio, chatbot e encaminhamento comercial.</p></div><span id="campaign-attribution-period" class="campaign-period"></span></header><div id="campaign-attribution-metrics" class="campaign-metrics compact"></div><div id="campaign-attribution-table" class="table-wrap"></div></article>
+            </section>
+
+            <section id="campaign-screen-performance" class="campaign-screen hidden" aria-label="Desempenho das campanhas">
+              <div id="campaign-performance-metrics" class="campaign-metrics" aria-live="polite"></div>
+              <div class="campaign-performance-grid">
+                <article class="campaign-panel campaign-trend campaign-panel-featured"><header><div><h2>Evolução diária</h2><p>Investimento e conversas ao longo do período.</p></div><span id="campaign-period" class="campaign-period"></span></header><div id="campaign-chart" class="campaign-chart campaign-chart-dual"></div></article>
+                <article class="campaign-panel campaign-funnel-panel"><header><div><h2>Funil de mídia</h2><p>Da exposição até a conversa reportada.</p></div></header><div id="campaign-funnel" class="campaign-funnel"></div></article>
+                <article class="campaign-panel campaign-summary"><header><div><h2>Eficiência</h2><p>Custos médios do período selecionado.</p></div></header><div id="campaign-summary"></div></article>
+              </div>
+            </section>
+
+            <section id="campaign-screen-list" class="campaign-screen hidden" aria-label="Lista de campanhas">
+              <div id="campaign-list-metrics" class="campaign-metrics campaign-list-metrics" aria-live="polite"></div>
+              <article class="campaign-panel campaign-table-panel"><header><div><h2>Campanhas</h2><p>Dados consolidados para consulta operacional.</p></div><span id="campaign-updated" class="campaign-period"></span></header><label class="campaign-search"><span>Buscar campanha</span><input id="campaign-search" type="search" placeholder="Nome da campanha" autocomplete="off"></label><div id="campaign-table" class="table-wrap"></div></article>
+            </section>
+          </div>
+        </section>
+
+        <section id="view-users" class="view-section hidden">
+          <article class="panel"><div class="panel-heading"><div><p class="panel-kicker">CONTROLE DE ACESSO</p><h2>Usuários autorizados</h2></div><span class="period-pill">Código por e-mail</span></div><p class="muted">O acesso é controlado pela lista segura da VPS. Novos e-mails não podem ser adicionados por esta tela.</p><div id="user-table" class="table-wrap"></div></article>
+        </section>
+      </section>
+    </div>
+
+    <aside id="conversation-drawer" class="drawer" aria-hidden="true">
+      <div class="drawer-backdrop" data-close-drawer></div>
+      <section class="drawer-panel" role="dialog" aria-modal="true" aria-labelledby="drawer-title">
+        <header class="drawer-header"><div><p class="panel-kicker">CONVERSA AUDITADA</p><h2 id="drawer-title">Detalhes</h2></div><button class="icon-button" data-close-drawer aria-label="Fechar">×</button></header>
+        <div id="drawer-content" class="drawer-content"></div>
+      </section>
+    </aside>
+
+    <script src="/app.js" defer></script>
+  </body>
+</html>
